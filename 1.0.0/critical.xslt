@@ -59,13 +59,16 @@
         \usepackage{gitinfo2}
         
         %watermark
+    		
+    		<xsl:if test="/TEI/teiHeader/revisionDesc/@status = 'draft'">
         \usepackage{draftwatermark}
-        <xsl:if test="/TEI/teiHeader/revisionDesc/@status = 'draft'">
-          \SetWatermarkText{Draft}
-          \SetWatermarkScale{.5}
-          \SetWatermarkAngle{0}
-          \SetWatermarkVerCenter{1 cm}
-        </xsl:if>
+        
+        %\SetWatermarkText{Draft}
+        %\SetWatermarkScale{.5}
+        %\SetWatermarkAngle{0}
+        %\SetWatermarkVerCenter{1 cm}
+    		</xsl:if>
+        
         
         %quotes settings
         \MakeOuterQuote{"}
@@ -76,7 +79,10 @@
         \titleformat{\chapter} {\normalfont\Large\uppercase}{\thechapter}{50pt}{}
         
         %eledmac settings
-        \foottwocol{B}
+        %\foottwocol format the designated apparatus in two columns
+        %\foottwocol{B}
+        %\footparagraph format the designated apparatus in two a single paragraph
+        \footparagraph{B}
         \linenummargin{outer}
         \sidenotemargin{inner}
         
