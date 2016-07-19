@@ -216,11 +216,18 @@
             <xsl:value-of select="tokenize(normalize-space(./lem), ' ')[last()]"/>
             <xsl:text>}</xsl:text>
         	</xsl:when>
-    			<xsl:when test="not(./lem/text())">
+    			<xsl:when test="not(./lem/node())">
     				<xsl:text>\lemma{</xsl:text>
     				<xsl:value-of select="./lem/@n"/>
     				<xsl:text>}</xsl:text>
     			</xsl:when>
+    			<xsl:otherwise>
+    				<xsl:text>\lemma{</xsl:text>
+    				<!-- <xsl:value-of select="./lem"/> -->
+    				<xsl:apply-templates/>
+    				<xsl:text>}</xsl:text>
+    			</xsl:otherwise>
+    			
     		</xsl:choose>
         <xsl:text>\Bfootnote{</xsl:text>
         <xsl:for-each select="./rdg">
