@@ -30,34 +30,66 @@
     <xsl:value-of select="replace(., '\s+', ' ')"/>    
     </xsl:template>
     
-    <xsl:template match="/">
-        %this tex file was auto produced from TEI by lombardpress-print on <xsl:value-of  select="current-dateTime()"/> using the  <xsl:value-of select="base-uri(document(''))"/> 
-        \documentclass[twoside, openright]{report}
-        
-        % etex package is added to fix bug with eledmac package and mac-tex 2015
-        % See http://tex.stackexchange.com/questions/250615/error-when-compiling-with-tex-live-2015-eledmac-package
-        \usepackage{etex}
-        
-        %imakeidx must be loaded beore eledmac
-        \usepackage{imakeidx}
-        
-        \usepackage{eledmac}
-        \usepackage{titlesec}
-        \usepackage [latin]{babel}
-        \usepackage[style=american] {csquotes}
-        \usepackage{geometry}
-        \usepackage{fancyhdr}
-        \usepackage[letter, center, cam]{crop}
-        
-        
-        \geometry{paperheight=10in, paperwidth=7in, hmarginratio=3:2, inner=1.7in, outer=1.13in, bmargin=1in} 
-        
-        %fancyheading settings
-        \pagestyle{fancy}
-        
-        %git package 
-        \usepackage{gitinfo2}
-        
+  <xsl:template match="/">
+%this tex file was auto produced from TEI by lombardpress-print on <xsl:value-of select="current-dateTime()"/> using the  <xsl:value-of select="base-uri(document(''))"/>
+\documentclass[a4paper, 12pt]{book}
+
+% imakeidx must be loaded beore eledmac
+\usepackage{imakeidx}
+\usepackage{titlesec}
+\usepackage{libertine}
+\usepackage{csquotes}
+
+\usepackage{geometry}
+\geometry{left=4cm, right=4cm, top=3cm, bottom=3cm}
+
+\usepackage{fancyhdr}
+% fancyheading settings
+\pagestyle{fancy}
+
+% latin language
+\usepackage{polyglossia}
+\setmainlanguage{english}
+\setotherlanguage{latin}
+
+% a critical mark
+\usepackage{amssymb}
+
+% git package
+\usepackage{gitinfo2}
+
+
+% title settings
+\titleformat{\chapter}{\normalfont\large\scshape}{\thechapter}{50pt}{}
+\titleformat{\section}{\normalfont\scshape}{\thesection}{1em}{}
+\titleformat{\subsection}[block]{\centering\normalfont\itshape}{\thesubsection}{}{}
+\titlespacing*{\subsection}{20pt}{3.25ex plus 1ex minus .2 ex}{1.5ex plus .2ex}[20pt]
+
+% reledmac settings
+\usepackage[final]{reledmac}
+
+\Xinplaceoflemmaseparator{0pt} % Don't add space after nolemma notes
+\Xarrangement{paragraph}
+\linenummargin{outer}
+\sidenotemargin{inner}
+\lineation{page}
+
+\Xendbeforepagenumber{p.~}
+\Xendafterpagenumber{,}
+\Xendlineprefixsingle{l.~}
+\Xendlineprefixmore{ll.~}
+
+\Xnumberonlyfirstinline[]
+\Xnumberonlyfirstintwolines[]
+\Xbeforenotes{\baselineskip}
+\preXnotes{24pt}
+
+\let\Afootnoterule=\relax
+\let\Bfootnoterule=\relax
+
+% other settings
+\linespread{1.1}
+
         %watermark
     		
     		<xsl:if test="/TEI/teiHeader/revisionDesc/@status = 'draft'">
@@ -77,17 +109,6 @@
         \titleformat{\section} {\normalfont\scshape}{\thesection}{1em}{}
         \titlespacing\section{0pt}{12pt plus 4pt minus 2pt}{12pt plus 2pt minus 2pt}
         \titleformat{\chapter} {\normalfont\Large\uppercase}{\thechapter}{50pt}{}
-        
-        %eledmac settings
-        %\foottwocol format the designated apparatus in two columns
-        %\foottwocol{B}
-        %\footparagraph format the designated apparatus in two a single paragraph
-        \footparagraph{B}
-        \linenummargin{outer}
-        \sidenotemargin{inner}
-        
-        %other settings
-        \linespread{1.1}
         
         %custom macros
         \newcommand{\name}[1]{\textsc{#1}}
