@@ -82,7 +82,7 @@
 \Xnumberonlyfirstinline[]
 \Xnumberonlyfirstintwolines[]
 \Xbeforenotes{\baselineskip}
-\preXnotes{24pt}
+\Xprenotes{24pt}
 
 \let\Afootnoterule=\relax
 \let\Bfootnoterule=\relax
