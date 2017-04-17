@@ -475,8 +475,7 @@
 
   <xsl:template match="cit">
     <xsl:text>\edtext{</xsl:text>
-    <xsl:apply-templates select="ref"/>
-    <xsl:apply-templates select="quote"/>
+    <xsl:apply-templates select="ref|quote"/>
     <xsl:text>}</xsl:text>
     <xsl:text>{\lemma{</xsl:text>
     <xsl:if test="$appFontiumQuote">
