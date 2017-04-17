@@ -1032,7 +1032,7 @@
   <!-- </xsl:template> -->
 
   <!-- Unclear in readings adds an "ut vid." to the note -->
-  <xsl:template match="rdg/unclear"><xsl:apply-templates/> \emph{ut vid.}</xsl:template>
+  <xsl:template match="rdg//unclear"><xsl:apply-templates/> \emph{ut vid.}</xsl:template>
 
   <!-- APPARATUS HELPER TEMPLATES -->
   <xsl:template name="process_empty_lemma_reading">
