@@ -601,7 +601,7 @@
               <xsl:value-of select="lem/cit/quote" />
             </xsl:when>
             <xsl:otherwise>
-              <xsl:value-of select="normalize-space(./lem)" />
+              <xsl:value-of select="lem" />
             </xsl:otherwise>
           </xsl:choose>
         </xsl:variable>
