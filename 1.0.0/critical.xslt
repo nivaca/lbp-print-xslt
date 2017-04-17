@@ -662,12 +662,12 @@
         </xsl:if>
         <xsl:for-each select="rdg">
           <!-- This test is not good. Intention: If rdg = lemma, or it is
-               explicitly said to be identical with the lemma with @ana, AND the
-               apparatus should be negative, it should not print the entry. It
-               gives problems with additions, where the test on identity between
-               lemma and reading returns true, but I don't what that (the
-               reading contains an <add>. -->
-          <xsl:if test="not($lemma_text = normalize-space(.) or @ana = '#lemma')
+               explicitly said to be identical with the lemma with
+               @copyOf='preceding::lem', AND the apparatus should be negative,
+               it should not print the entry. It gives problems with additions,
+               where the test on identity between lemma and reading returns
+               true, but I don't what that (the reading contains an <add>. -->
+          <xsl:if test="not($lemma_text = ./text() or @copyOf = 'preceding::lem')
                         or @type = 'correction-addition'
                         or $positiveApparatus">
             <xsl:call-template name="varianttype">
