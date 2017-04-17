@@ -26,10 +26,10 @@
         <xsl:variable name="lemma_text">
           <xsl:choose>
             <xsl:when test="lem/cit/quote">
-              <xsl:value-of select="lem/cit/quote" />
+              <xsl:value-of select="text() | lem/cit/quote" />
             </xsl:when>
             <xsl:otherwise>
-              <xsl:value-of select="lem" />
+              <xsl:value-of select="normalize-space(lem)" />
             </xsl:otherwise>
           </xsl:choose>
         </xsl:variable>
