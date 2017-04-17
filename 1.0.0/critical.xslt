@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0" xpath-default-namespace="http://www.tei-c.org/ns/1.0" xmlns:tei="http://www.tei-c.org/ns/1.0">
+<xsl:stylesheet
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0" xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+    xmlns:tei="http://www.tei-c.org/ns/1.0"
+    xmlns:private="local functions">
 
   <!-- Variables from XML teiHeader -->
   <xsl:param name="apploc"><xsl:value-of select="/TEI/teiHeader/encodingDesc/variantEncoding/@location"/></xsl:param>
@@ -7,7 +10,6 @@
   <xsl:variable name="title"><xsl:value-of select="/TEI/teiHeader/fileDesc/titleStmt/title"/></xsl:variable>
   <xsl:variable name="author"><xsl:value-of select="/TEI/teiHeader/fileDesc/titleStmt/author"/></xsl:variable>
   <xsl:variable name="editor"><xsl:value-of select="/TEI/teiHeader/fileDesc/titleStmt/editor"/></xsl:variable>
-  <xsl:param name="targetdirectory">null</xsl:param>
 
   <!-- get versioning numbers -->
   <xsl:param name="sourceversion"><xsl:value-of select="/TEI/teiHeader/fileDesc/editionStmt/edition/@n"/></xsl:param>
@@ -19,24 +21,57 @@
   <xsl:variable name="combinedversionnumber"><xsl:value-of select="$sourceversion"/>+<xsl:value-of select="$conversionversion"/></xsl:variable>
   <!-- end versioning numbers -->
 
-  <!-- Processing variables -->
-  <xsl:variable name="fs"><xsl:value-of select="/TEI/text/body/div/@xml:id"/></xsl:variable>
-  <xsl:variable name="name-list-file">../../lists/prosopography.xml</xsl:variable>
-  <xsl:variable name="work-list-file">../../lists/workscited.xml</xsl:variable>
-
   <!-- BEGIN: Document configuration -->
   <!-- Variables -->
-  <xsl:variable name="app_entry_separator">;</xsl:variable>
-  <xsl:variable name="font_size">11</xsl:variable>
   <xsl:variable name="starts_on" select="/TEI/text/front/div/pb"/>
 
-  <!-- Boolean switches -->
-  <xsl:variable name="ignoreSpellingVariants" select="true()"/>
-  <xsl:variable name="ignoreInsubstantialEntries" select="true()"/>
-  <xsl:variable name="positiveApparatus" select="false()"/>
-  <xsl:variable name="apparatusNumbering" select="false()"/>
-  <xsl:variable name="parallelTranslation" select="false()"/>
-  <xsl:variable name="appFontiumQuote" select="false()"/>
+  <!-- Command line parameters -->
+  <xsl:param name="name-list-file">../../lists/prosopography.xml</xsl:param>
+  <xsl:param name="work-list-file">../../lists/workscited.xml</xsl:param>
+  <xsl:param name="app-entry-separator">;</xsl:param>
+  <xsl:param name="font-size">12</xsl:param>
+  <xsl:param name="ignore-spelling-variants">no</xsl:param>
+  <xsl:param name="ignore-insubstantial-entries">no</xsl:param>
+  <xsl:param name="positive-apparatus">no</xsl:param>
+  <xsl:param name="apparatus-numbering">no</xsl:param>
+  <xsl:param name="parallel-translation">no</xsl:param>
+  <xsl:param name="app-fontium-quote">no</xsl:param>
+  <xsl:param name="include-app-notes">yes</xsl:param>
+  <xsl:param name="app-notes-in-separate-apparatus">yes</xsl:param>
+  <xsl:param name="standalone-document">no</xsl:param>
+
+  <!--
+      Boolean check lists.
+      To make command line parameters more robust, we check whether the value
+      passed is one of the possible true or false values defined in these two
+      lists with the test "parameter-name = boolean-true/*" (or boolean-false)
+      if we test for false value.
+  -->
+  <xsl:variable name="boolean-true">
+    <n>yes</n>
+    <n>true</n>
+    <n>1</n>
+  </xsl:variable>
+
+  <xsl:variable name="boolean-false">
+    <n>no</n>
+    <n>true</n>
+    <n>0</n>
+  </xsl:variable>
+
+  <xsl:function name="private:istrue">
+    <xsl:param name="parameter-name"/>
+    <xsl:if test="lower-case($parameter-name) = $boolean-true/*">
+      <xsl:value-of select="true()"/>
+    </xsl:if>
+  </xsl:function>
+
+  <xsl:function name="private:isfalse">
+    <xsl:param name="parameter-name"/>
+    <xsl:if test="lower-case($parameter-name) = $boolean-false/*">
+      <xsl:value-of select="true()"/>
+    </xsl:if>
+  </xsl:function>
   <!-- END: Document configuration -->
 
   <xsl:variable name="translationFile">
@@ -199,7 +234,7 @@
 
   <xsl:template match="div[translate(@ana, '#', '') = $structure-types/*
                        and not(@n)]">
-    <xsl:if test="not($parallelTranslation)">
+    <xsl:if test="private:isfalse($parallel-translation)">
       <!-- The parallel typesetting does not work well with manually added space
            because of syncronization -->
       <xsl:text>&#xa;\medbreak&#xa;</xsl:text>
@@ -288,7 +323,7 @@
 
   <xsl:template match="body">
     <xsl:choose>
-      <xsl:when test="$parallelTranslation">
+      <xsl:when test="private:istrue($parallel-translation)">
         \begin{pages}
         \begin{Leftside}
         <xsl:call-template name="documentDiv">
@@ -416,7 +451,6 @@
   <xsl:template match="unclear">\emph{<xsl:apply-templates/> [?]}</xsl:template>
   <xsl:template match="desc">\emph{<xsl:apply-templates/>}</xsl:template>
   <xsl:template match="abbr">\emph{<xsl:apply-templates/>}</xsl:template>
-
   <xsl:template match="mentioned">\emph{<xsl:apply-templates/>}</xsl:template>
   <xsl:template match="sic[@ana='#crux']">\corruption{<xsl:apply-templates/>}</xsl:template>
 
@@ -478,7 +512,7 @@
     <xsl:apply-templates select="ref|quote"/>
     <xsl:text>}</xsl:text>
     <xsl:text>{\lemma{</xsl:text>
-    <xsl:if test="$appFontiumQuote">
+    <xsl:if test="private:istrue($app-fontium-quote)">
       <xsl:choose>
         <xsl:when test="count(tokenize(normalize-space(quote), ' ')) &gt; 4">
           <xsl:value-of select="tokenize(normalize-space(quote), ' ')[1]"/>
@@ -493,7 +527,7 @@
     </xsl:if>
     <xsl:text>}</xsl:text>
     <xsl:choose>
-      <xsl:when test="$appFontiumQuote">
+      <xsl:when test="private:istrue($app-fontium-quote)">
         <xsl:text>\Afootnote{</xsl:text>
       </xsl:when>
       <xsl:otherwise>
@@ -581,12 +615,12 @@
     <!-- First, check if it's a spelling entry and if they should be added -->
     <xsl:choose>
       <xsl:when test="@type='variation-spelling'">
-        <xsl:if test="$ignoreSpellingVariants">
+        <xsl:if test="private:istrue($ignore-spelling-variants)">
           <xsl:apply-templates select="lem"/>
         </xsl:if>
       </xsl:when>
       <xsl:when test="@type='insubstantial'">
-        <xsl:if test="$ignoreInsubstantialEntries">
+        <xsl:if test="private:istrue($ignore-insubstantial-entries)">
           <xsl:apply-templates select="lem"/>
         </xsl:if>
       </xsl:when>
@@ -669,7 +703,7 @@
                true, but I don't what that (the reading contains an <add>. -->
           <xsl:if test="not($lemma_text = ./text() or @copyOf = 'preceding::lem')
                         or @type = 'correction-addition'
-                        or $positiveApparatus">
+                        or private:istrue($positive-apparatus)">
             <xsl:call-template name="varianttype">
               <xsl:with-param name="preceding_word" select="$preceding_word"/>
               <xsl:with-param name="lemma_text" select="$lemma_text" />
@@ -700,7 +734,7 @@
       <!-- VARIATION READINGS -->
       <!-- variation-substance -->
       <xsl:when test="@type = 'variation-substance' or not(@type)">
-        <xsl:if test="not($lemma_text = normalize-space(.))">
+        <xsl:if test="not($lemma_text = rdg/text())">
           <xsl:apply-templates select="."/>
         </xsl:if>
         <xsl:text> </xsl:text>
@@ -709,7 +743,7 @@
 
       <!-- variation-orthography -->
       <xsl:when test="@type = 'variation-orthography'">
-        <xsl:if test="not($ignoreSpellingVariants)">
+        <xsl:if test="private:isfalse($ignore-spelling-variants)">
           <xsl:apply-templates select="."/>
           <xsl:text> </xsl:text>
           <xsl:call-template name="get_witness_siglum"/>
@@ -954,8 +988,8 @@
           <xsl:text> \emph{suppl.}</xsl:text>
           <xsl:text> </xsl:text>
           <xsl:value-of select="@source"/>
-          <xsl:if test="following-sibling::*[1][self::rdg]">
-            <xsl:value-of select="$app_entry_separator"/>
+          <xsl:if test="following-sibling::*">
+            <xsl:value-of select="$app-entry-separator"/>
             <xsl:text> </xsl:text>
           </xsl:if>
         </xsl:if>
@@ -983,7 +1017,7 @@
           <xsl:value-of select="@source"/>
         </xsl:if>
         <xsl:if test="following-sibling::*">
-          <xsl:value-of select="$app_entry_separator"/>
+          <xsl:value-of select="$app-entry-separator"/>
           <xsl:text> </xsl:text>
         </xsl:if>
       </xsl:when>
@@ -1002,7 +1036,7 @@
           <xsl:value-of select="@source"/>
           <xsl:text> </xsl:text>
           <xsl:if test="following-sibling::*">
-            <xsl:value-of select="$app_entry_separator"/>
+            <xsl:value-of select="$app-entry-separator"/>
             <xsl:text> </xsl:text>
           </xsl:if>
         </xsl:if>
@@ -1062,11 +1096,11 @@
       </xsl:for-each>
       <xsl:text>}</xsl:text>
     </xsl:if>
-    <xsl:if test="$apparatusNumbering">
+    <xsl:if test="private:istrue($apparatus-numbering)">
       <xsl:text> n</xsl:text><xsl:value-of select="$appnumber"></xsl:value-of>
     </xsl:if>
-    <xsl:if test="following-sibling::* and not(following-sibling::witDetail)">
-      <xsl:value-of select="$app_entry_separator"/>
+    <xsl:if test="following-sibling::*[1][self::rdg]">
+      <xsl:value-of select="$app-entry-separator"/>
       <xsl:text> </xsl:text>
     </xsl:if>
   </xsl:template>
