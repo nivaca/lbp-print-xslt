@@ -41,3 +41,11 @@ different conversion scripts across environments. It will also ensure that
 different programmatic publication and processing workflows can make some basic
 assumptions about the XSLT packages that are used, irrespective of where the
 package comes from. 
+
+## Contributing
+
+Of course, pull requests or issue reports with this package are very welcome in
+the [issue tracker](https://github.com/stenskjaer/lbp-print-xslt/issues).
+
+If your produce your own package, please let is know and we will create a
+package registry for public reference.
