@@ -893,9 +893,9 @@
             <xsl:text> \emph{transp.} </xsl:text>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:value-of select="tokenize(normalize-space(subst/del), ' ')[1]"/>
-            <xsl:text> \emph{ante} </xsl:text>
             <xsl:value-of select="tokenize(normalize-space(subst/del), ' ')[last()]"/>
+            <xsl:text> \emph{ante} </xsl:text>
+            <xsl:value-of select="tokenize(normalize-space(subst/del), ' ')[1]"/>
             <xsl:text> \emph{transp.} </xsl:text>
           </xsl:otherwise>
         </xsl:choose>
