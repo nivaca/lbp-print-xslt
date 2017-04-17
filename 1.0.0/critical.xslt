@@ -717,13 +717,75 @@
           </xsl:if>
         </xsl:for-each>
 
-        <!-- The possibility of having a note for the whole app entry. -->
-        <xsl:if test="./note">
-          <xsl:apply-templates select="note"/>
-        </xsl:if>
+        <!-- Handling of apparatus notes. -->
+        <!-- Test: If notes as included, and there is a note in the apparatus:
+             either make a separate app entry (Cfootnote), if
+             $app-notes-in-separate-apparatus is true, otherwise, just include it in
+             the current app (Bfootnote).
+             If there is no note, or they have been excluded, just close the app.
+        -->
+        <xsl:choose>
+          <!-- First: is there any notes, and they are not excluded -->
+          <xsl:when test="./note and private:istrue($include-app-notes)">
 
-        <!-- Wrap up -->
-        <xsl:text>}}</xsl:text>
+            <xsl:choose>
+              <!-- Create separate note apparatus with Cfootnote -->
+              <xsl:when test="private:istrue($app-notes-in-separate-apparatus)">
+                <!-- Close current entry and create new. -->
+                <xsl:text>}}</xsl:text>
+
+                <!-- The critical text, which is always empty as we have already
+                     made the text entry -->
+                <xsl:text>\edtext{}{</xsl:text>
+
+                <!-- The app lemma. Given in abbreviated or full length. -->
+                <xsl:choose>
+                  <xsl:when test="count(tokenize(normalize-space($lemma_text), ' ')) &gt; 4">
+                    <xsl:text>\lemma{</xsl:text>
+                    <xsl:value-of select="tokenize(normalize-space($lemma_text), ' ')[1]"/>
+                    <xsl:text> \dots{} </xsl:text>
+                    <xsl:value-of select="tokenize(normalize-space($lemma_text), ' ')[last()]"/>
+                    <xsl:text>}</xsl:text>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:text>\lemma{</xsl:text>
+                    <xsl:value-of select="$lemma_text"/>
+                    <xsl:text>}</xsl:text>
+                  </xsl:otherwise>
+                </xsl:choose>
+
+                <!-- The critical note itself. If lemma is empty, use the [nosep] option -->
+                <xsl:choose>
+                  <xsl:when test="lem = ''">
+                    <xsl:text>\Cfootnote[nosep]{</xsl:text>
+                    <xsl:text> \emph{after} </xsl:text>
+                    <xsl:value-of select="lem/@n"/>
+                    <xsl:text>: </xsl:text>
+                    <xsl:apply-templates select="note"/>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:text>\Cfootnote{</xsl:text>
+                    <xsl:apply-templates select="note"/>
+                  </xsl:otherwise>
+                </xsl:choose>
+
+                <!-- Close the Cfootnote -->
+                <xsl:text>}}</xsl:text>
+              </xsl:when>
+
+              <!-- Don't make a separate apparatus -->
+              <xsl:otherwise>
+                <xsl:text>Note: </xsl:text>
+                <xsl:apply-templates select="note"/>
+              </xsl:otherwise>
+            </xsl:choose>
+          </xsl:when>
+
+          <!-- There is not note, or it is excluded, so we just close the Bfootnote -->
+          <xsl:otherwise>
+            <xsl:text>}}</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
 
       </xsl:otherwise>
     </xsl:choose>
