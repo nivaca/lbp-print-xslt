@@ -412,8 +412,6 @@
     <xsl:text>}</xsl:text>
   </xsl:template>
   <xsl:template match="surplus">\secluded{<xsl:apply-templates/>}</xsl:template>
-  <xsl:template match="note">\footnoteA{<xsl:apply-templates/>}</xsl:template>
-  <xsl:template match="app/note"><xsl:apply-templates/></xsl:template>
   <xsl:template match="unclear">\emph{<xsl:apply-templates/> [?]}</xsl:template>
   <xsl:template match="desc">\emph{<xsl:apply-templates/>}</xsl:template>
 
