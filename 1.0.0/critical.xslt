@@ -415,6 +415,7 @@
   <xsl:template match="surplus">\secluded{<xsl:apply-templates/>}</xsl:template>
   <xsl:template match="unclear">\emph{<xsl:apply-templates/> [?]}</xsl:template>
   <xsl:template match="desc">\emph{<xsl:apply-templates/>}</xsl:template>
+  <xsl:template match="abbr">\emph{<xsl:apply-templates/>}</xsl:template>
 
   <xsl:template match="mentioned">\emph{<xsl:apply-templates/>}</xsl:template>
   <xsl:template match="sic[@ana='#crux']">\corruption{<xsl:apply-templates/>}</xsl:template>
