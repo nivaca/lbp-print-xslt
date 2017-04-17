@@ -4,6 +4,11 @@ This repository contains a xslt package for conversion
 of [LombardPress Schema](http://lombardpress.org/schema/docs/) compliant TEI XML
 transcriptions to TeX format. 
 
+The [LombardPress print app](https://github.com/stenskjaer/lbp_print-web-app)
+uses this package as its default conversion scripts.
+Visit [print.lombardpress.org](http://print.lombardpress.org) to see it in
+action.
+
 ## Packaging XSLT scripts
 
 Anyone can create custom xslt-latex packages that can be used for this purpose.
