@@ -73,7 +73,7 @@
         <xsl:when test="$labelType='start'">
           <xsl:text>\edlabelS{</xsl:text>
           <xsl:value-of select="@xml:id"/>
-          <xsl:text>}</xsl:text>
+          <xsl:text>}%</xsl:text>
         </xsl:when>
         <xsl:when test="$labelType='end'">
           <xsl:text>\edlabelE{</xsl:text>
