@@ -24,7 +24,14 @@
         <!-- Two initial variables -->
         <!-- Store lemma text if it exists? -->
         <xsl:variable name="lemma_text">
-          <xsl:value-of select="normalize-space(lem/*[not(self::bibl)])" />
+          <xsl:choose>
+            <xsl:when test="lem/cit[quote]">
+              <xsl:value-of select="lem//text()[not(ancestor::bibl)]" />
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:value-of select="lem/node()" />
+            </xsl:otherwise>
+          </xsl:choose>
         </xsl:variable>
         <!-- Register a possible text anchor (for empty lemmas) -->
         <xsl:variable name="preceding_word" select="lem/@n"/>
@@ -47,7 +54,7 @@
           </xsl:when>
           <xsl:otherwise>
             <xsl:text>\lemma{</xsl:text>
-            <xsl:value-of select="$lemma_text"/>
+            <xsl:value-of select="normalize-space($lemma_text)"/>
             <xsl:text>}</xsl:text>
           </xsl:otherwise>
         </xsl:choose>
@@ -76,7 +83,7 @@
                node when handling the variants. -->
           <xsl:for-each select="./lem">
             <xsl:call-template name="varianttype">
-              <xsl:with-param name="lemma_text" select="$lemma_text" />
+              <xsl:with-param name="lemma_text" select="normalize-space($lemma_text)" />
               <xsl:with-param name="fromLemma">1</xsl:with-param>
             </xsl:call-template>
           </xsl:for-each>
@@ -88,12 +95,12 @@
                gives problems with additions, where the test on identity between
                lemma and reading returns true, but I don't what that (the
                reading contains an <add>. -->
-          <xsl:if test="not($lemma_text = ./text() or @copyOf = 'preceding::lem')
+          <xsl:if test="not(normalize-space($lemma_text) = . or @copyOf = 'preceding::lem')
                         or @type = 'correction-addition'
                         or private:istrue($positive-apparatus)">
             <xsl:call-template name="varianttype">
               <xsl:with-param name="preceding_word" select="$preceding_word"/>
-              <xsl:with-param name="lemma_text" select="$lemma_text" />
+              <xsl:with-param name="lemma_text" select="normalize-space($lemma_text)" />
               <xsl:with-param name="fromLemma">0</xsl:with-param>
             </xsl:call-template>
           </xsl:if>
@@ -171,6 +178,8 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+
+
   <xsl:template name="varianttype">
     <xsl:param name="lemma_text" />
     <xsl:param name="fromLemma" />
@@ -182,8 +191,6 @@
       <!-- variation-substance -->
       <xsl:when test="@type = 'variation-substance' or not(@type)">
         <xsl:if test="not($lemma_text = rdg)">
-          <xsl:value-of select="normalize-space($lemma_text)"/>
-          <xsl:value-of select="rdg"/>
           <xsl:apply-templates select="."/>
         </xsl:if>
         <xsl:text> </xsl:text>
