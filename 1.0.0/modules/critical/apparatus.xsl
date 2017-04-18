@@ -24,14 +24,7 @@
         <!-- Two initial variables -->
         <!-- Store lemma text if it exists? -->
         <xsl:variable name="lemma_text">
-          <xsl:choose>
-            <xsl:when test="lem/cit/quote">
-              <xsl:value-of select="text() | lem/cit/quote" />
-            </xsl:when>
-            <xsl:otherwise>
-              <xsl:value-of select="normalize-space(lem)" />
-            </xsl:otherwise>
-          </xsl:choose>
+          <xsl:value-of select="normalize-space(lem/*[not(self::bibl)])" />
         </xsl:variable>
         <!-- Register a possible text anchor (for empty lemmas) -->
         <xsl:variable name="preceding_word" select="lem/@n"/>
