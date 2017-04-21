@@ -451,7 +451,7 @@
         <xsl:if test="@source">
           <xsl:text> \emph{suppl.}</xsl:text>
           <xsl:text> </xsl:text>
-          <xsl:value-of select="@source"/>
+          <xsl:call-template name="get_witness_siglum"/>
           <xsl:if test="following-sibling::*">
             <xsl:value-of select="$app-entry-separator"/>
             <xsl:text> </xsl:text>
@@ -478,7 +478,7 @@
         <xsl:text> \emph{secl.}</xsl:text>
         <xsl:if test="@source">
           <xsl:text> </xsl:text>
-          <xsl:value-of select="@source"/>
+          <xsl:call-template name="get_witness_siglum"/>
         </xsl:if>
         <xsl:if test="following-sibling::*">
           <xsl:value-of select="$app-entry-separator"/>
@@ -497,7 +497,7 @@
         </xsl:choose>
         <xsl:if test="@source">
           <xsl:text> \emph{conj.} </xsl:text>
-          <xsl:value-of select="@source"/>
+          <xsl:call-template name="get_witness_siglum"/>
           <xsl:text> </xsl:text>
           <xsl:if test="following-sibling::*">
             <xsl:value-of select="$app-entry-separator"/>
@@ -544,14 +544,26 @@
 
   <xsl:template name="get_witness_siglum">
     <xsl:variable name="appnumber"><xsl:number level="any" from="tei:text"/></xsl:variable>
+    <!-- First fill in witness references -->
+    <xsl:variable name="witness-id" select="translate(@wit, '#', '')"/>
     <!-- Check for sibling witDetail elements and insert content -->
-    <xsl:if test="following-sibling::witDetail">
+    <xsl:if test="following-sibling::witDetail[translate(@wit, '#', '')=$witness-id]">
       <xsl:text>\emph{</xsl:text>
-      <xsl:value-of select="following-sibling::witDetail"/>
+      <xsl:apply-templates select="following-sibling::witDetail[translate(@wit, '#', '')=$witness-id]"/>
       <xsl:text>} </xsl:text>
     </xsl:if>
-    <!-- Move on with the siglum itself -->
-    <xsl:value-of select="translate(./@wit, '#', '')"/>
+    <xsl:value-of select="translate(@wit, '#', '')"/>
+    <xsl:text> </xsl:text>
+    <!-- Then fill in other sources -->
+    <xsl:variable name="source-id" select="translate(@source, '#', '')"/>
+    <xsl:choose>
+      <xsl:when test="//tei:bibl[@xml:id=$source-id]/@rend">
+        <xsl:value-of select="//tei:bibl[@xml:id=$source-id]/@rend"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$source-id"/>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:if test=".//@hand">
       <xsl:text>\hand{</xsl:text>
       <xsl:for-each select=".//@hand">
