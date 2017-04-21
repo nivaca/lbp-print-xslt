@@ -179,6 +179,23 @@
     </xsl:choose>
   </xsl:template>
 
+  <xsl:template name="inline-corrections">
+    <xsl:choose>
+      <xsl:when test="./add">
+        <xsl:text>(</xsl:text>
+        <xsl:value-of select="./add"/>
+        <xsl:call-template name="getLocation" />
+        <xsl:text>) </xsl:text>
+      </xsl:when>
+      <xsl:when test="./del">
+        <xsl:text>(</xsl:text>
+        <xsl:text>\emph{</xsl:text>
+        <xsl:value-of select="./del"/>
+        <xsl:text>} del.</xsl:text>
+        <xsl:text>) </xsl:text>
+      </xsl:when>
+    </xsl:choose>
+  </xsl:template>
 
   <xsl:template name="varianttype">
     <xsl:param name="lemma_text" />
@@ -194,6 +211,7 @@
           <xsl:apply-templates select="."/>
         </xsl:if>
         <xsl:text> </xsl:text>
+        <xsl:call-template name="inline-corrections"/>
         <xsl:call-template name="get_witness_siglum"/>
       </xsl:when>
 
@@ -243,6 +261,7 @@
             </xsl:call-template>
           </xsl:otherwise>
         </xsl:choose>
+        <xsl:call-template name="inline-corrections"/>
         <xsl:call-template name="get_witness_siglum"/>
       </xsl:when>
 
