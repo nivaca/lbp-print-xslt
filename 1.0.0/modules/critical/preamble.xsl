@@ -11,7 +11,6 @@
 
       % imakeidx must be loaded beore eledmac
       \usepackage{imakeidx}
-      \usepackage{titlesec}
       \usepackage{libertine}
       \usepackage{csquotes}
 
@@ -35,6 +34,7 @@
 
 
       % title settings
+      \usepackage{titlesec}
       \titleformat{\chapter}{\normalfont\large\scshape}{\thechapter}{50pt}{}
       \titleformat{\section}{\normalfont\scshape}{\thesection}{1em}{}
       \titleformat{\subsection}[block]{\centering\normalfont\itshape}{\thesubsection}{}{}
