@@ -620,7 +620,7 @@
 
   <xsl:template name="getLocation">
     <xsl:choose>
-      <xsl:when test="add/@place='above'">
+      <xsl:when test="add/@place='above-line'">
         <xsl:text> \emph{sup. lin.}</xsl:text>
       </xsl:when>
       <xsl:when test="contains(add/@place, 'margin')">
