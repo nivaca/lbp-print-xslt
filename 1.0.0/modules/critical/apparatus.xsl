@@ -59,6 +59,13 @@
           </xsl:otherwise>
         </xsl:choose>
 
+        <!-- Make an applabel if the app note has an xml:id -->
+        <xsl:if test="@xml:id">
+          <xsl:text>\applabel{</xsl:text>
+          <xsl:value-of select="@xml:id"/>
+          <xsl:text>}</xsl:text>
+        </xsl:if>
+
         <!-- The critical note itself. If lemma is empty, use the [nosep] option -->
         <xsl:choose>
           <xsl:when test="lem = ''">
