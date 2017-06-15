@@ -275,23 +275,7 @@
       <!-- variation-absent -->
       <!-- TODO: Expand further in accordance with documentation -->
       <xsl:when test="@type = 'variation-absent'">
-        <xsl:choose>
-          <xsl:when test="./space">
-            <xsl:text>\emph{spat. vac. </xsl:text>
-            <!-- spatium vacuum. Full formula: "spatium vacuum NN litterarum
-                 capax" or "spatium vacuum NN litterarum"-->
-            <xsl:call-template name="getExtent"/>
-            <xsl:if test="./space/@reason">
-              <xsl:text> (</xsl:text>
-              <xsl:value-of select="./space/@cause"/>
-              <xsl:text>)</xsl:text>
-            </xsl:if>
-            <xsl:text>} </xsl:text>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:text>\emph{om.} </xsl:text>
-          </xsl:otherwise>
-        </xsl:choose>
+        <xsl:text>\emph{om.} </xsl:text>
         <xsl:call-template name="get_witness_siglum"/>
       </xsl:when>
 
