@@ -29,7 +29,7 @@
               <xsl:value-of select="lem//text()[not(ancestor::bibl)]" />
             </xsl:when>
             <xsl:otherwise>
-              <xsl:value-of select="lem" />
+              <xsl:value-of select="normalize-space(lem)" />
             </xsl:otherwise>
           </xsl:choose>
         </xsl:variable>
@@ -45,16 +45,16 @@
 
         <!-- The app lemma. Given in abbreviated or full length. -->
         <xsl:choose>
-          <xsl:when test="count(tokenize(normalize-space($lemma_text), ' ')) &gt; 4">
+          <xsl:when test="count(tokenize($lemma_text, ' ')) &gt; 4">
             <xsl:text>\lemma{</xsl:text>
-            <xsl:value-of select="tokenize(normalize-space($lemma_text), ' ')[1]"/>
+            <xsl:value-of select="tokenize($lemma_text, ' ')[1]"/>
             <xsl:text> \dots{} </xsl:text>
-            <xsl:value-of select="tokenize(normalize-space($lemma_text), ' ')[last()]"/>
+            <xsl:value-of select="tokenize($lemma_text, ' ')[last()]"/>
             <xsl:text>}</xsl:text>
           </xsl:when>
           <xsl:otherwise>
             <xsl:text>\lemma{</xsl:text>
-            <xsl:value-of select="normalize-space($lemma_text)"/>
+            <xsl:value-of select="$lemma_text"/>
             <xsl:text>}</xsl:text>
           </xsl:otherwise>
         </xsl:choose>
@@ -90,7 +90,7 @@
                node when handling the variants. -->
           <xsl:for-each select="./lem">
             <xsl:call-template name="varianttype">
-              <xsl:with-param name="lemma_text" select="normalize-space($lemma_text)" />
+              <xsl:with-param name="lemma_text" select="$lemma_text" />
               <xsl:with-param name="fromLemma">1</xsl:with-param>
             </xsl:call-template>
           </xsl:for-each>
@@ -102,12 +102,12 @@
                gives problems with additions, where the test on identity between
                lemma and reading returns true, but I don't what that (the
                reading contains an <add>. -->
-          <xsl:if test="not(normalize-space($lemma_text) = . or @copyOf = 'preceding::lem')
+          <xsl:if test="not($lemma_text = . or @copyOf = 'preceding::lem')
                         or @type = 'correction-addition'
                         or private:istrue($positive-apparatus)">
             <xsl:call-template name="varianttype">
               <xsl:with-param name="preceding_word" select="$preceding_word"/>
-              <xsl:with-param name="lemma_text" select="normalize-space($lemma_text)" />
+              <xsl:with-param name="lemma_text" select="$lemma_text" />
               <xsl:with-param name="fromLemma">0</xsl:with-param>
             </xsl:call-template>
           </xsl:if>
@@ -136,11 +136,11 @@
 
                 <!-- The app lemma. Given in abbreviated or full length. -->
                 <xsl:choose>
-                  <xsl:when test="count(tokenize(normalize-space($lemma_text), ' ')) &gt; 4">
+                  <xsl:when test="count(tokenize($lemma_text, ' ')) &gt; 4">
                     <xsl:text>\lemma{</xsl:text>
-                    <xsl:value-of select="tokenize(normalize-space($lemma_text), ' ')[1]"/>
+                    <xsl:value-of select="tokenize($lemma_text, ' ')[1]"/>
                     <xsl:text> \dots{} </xsl:text>
-                    <xsl:value-of select="tokenize(normalize-space($lemma_text), ' ')[last()]"/>
+                    <xsl:value-of select="tokenize($lemma_text, ' ')[last()]"/>
                     <xsl:text>}</xsl:text>
                   </xsl:when>
                   <xsl:otherwise>
