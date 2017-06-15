@@ -502,7 +502,7 @@
           <!-- If we come from lemma element, don't repeat the content -->
           <xsl:when test="$fromLemma = 1"/>
           <xsl:otherwise>
-            <xsl:apply-templates select="."/>
+            <xsl:apply-templates select="corr"/>
           </xsl:otherwise>
         </xsl:choose>
         <xsl:if test="@source">
