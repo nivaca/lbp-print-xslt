@@ -27,8 +27,8 @@
 
   <!-- BEGIN: Document configuration -->
   <!-- Variables -->
-  <xsl:variable name="app_entry_separator">;</xsl:variable>
-  <xsl:variable name="starts_on" select="/TEI/text/front/div/pb"/>
+  <xsl:variable name="app_entry_separator">;</xsl:variable> <xsl:variable
+  name="starts_on" select="/TEI/text/front/div[@xml:id='starts-on']/pb"/>
 
   <!-- Apparatus switches -->
   <xsl:variable name="ignoreSpellingVariants" select="true()"/>
