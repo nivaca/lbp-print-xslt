@@ -118,6 +118,18 @@
         <xsl:apply-templates/>
       </xsl:otherwise>
     </xsl:choose>
+    <!-- Create endnotes (`<note>`s within `<app>`). -->
+    <xsl:if test="private:istrue($include-app-notes) and
+                  private:istrue($app-notes-in-separate-apparatus)">
+      <xsl:text>
+        \clearpage
+        \section*{Critical apparatus notes}
+        Format: \verb+n[-nn].x[-y]+ where \verb+n+ and \verb+nn+ = pagenumbers and verb+x+ and \verb+y+ =
+        linenumbers. Content of brackets is optional.
+
+        \doendnotes{A}
+      </xsl:text>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="front/div">

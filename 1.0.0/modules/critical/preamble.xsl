@@ -50,10 +50,10 @@
       \sidenotemargin{inner}
       \lineation{page}
 
-      \Xendbeforepagenumber{p.~}
-      \Xendafterpagenumber{,}
-      \Xendlineprefixsingle{l.~}
-      \Xendlineprefixmore{ll.~}
+      \Xendbeforepagenumber{}
+      \Xendafterpagenumber{.}
+      \Xendlineprefixsingle{}
+      \Xendlineprefixmore{}
 
       \Xnumberonlyfirstinline[]
       \Xnumberonlyfirstintwolines[]

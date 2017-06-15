@@ -150,22 +150,23 @@
                   </xsl:otherwise>
                 </xsl:choose>
 
-                <!-- The critical note itself. If lemma is empty, use the [nosep] option -->
+                <!-- Notes in the apparatus are put as endnotes. If lemma is
+                     empty, use the [nosep] option -->
                 <xsl:choose>
                   <xsl:when test="lem = ''">
-                    <xsl:text>\Cfootnote[nosep]{</xsl:text>
+                    <xsl:text>\Aendnote[nosep]{</xsl:text>
                     <xsl:text> \emph{after} </xsl:text>
                     <xsl:value-of select="lem/@n"/>
                     <xsl:text>: </xsl:text>
                     <xsl:apply-templates select="note"/>
                   </xsl:when>
                   <xsl:otherwise>
-                    <xsl:text>\Cfootnote{</xsl:text>
+                    <xsl:text>\Aendnote{</xsl:text>
                     <xsl:apply-templates select="note"/>
                   </xsl:otherwise>
                 </xsl:choose>
 
-                <!-- Close the Cfootnote -->
+                <!-- Close the Aendnote -->
                 <xsl:text>}}</xsl:text>
               </xsl:when>
 
