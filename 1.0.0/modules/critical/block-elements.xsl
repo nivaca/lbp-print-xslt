@@ -6,7 +6,7 @@
 
   <xsl:template match="head">
     <xsl:if test="not(following-sibling::p)">
-      \subsection*{<xsl:apply-templates/>}
+      \extrasubsection*{<xsl:apply-templates/>}
     </xsl:if>
   </xsl:template>
 
@@ -29,7 +29,7 @@
                   ((parent::div[1]/translate(@ana, '#', '') = $structure-types/*) and (position() = 1))">
       <xsl:text>[</xsl:text>
       <xsl:if test="preceding-sibling::head">
-        <xsl:text>\subsection*{</xsl:text>
+        <xsl:text>\extrasubsection{</xsl:text>
         <xsl:apply-templates select="preceding-sibling::head/node()"/>
         <xsl:text>}</xsl:text>
       </xsl:if>

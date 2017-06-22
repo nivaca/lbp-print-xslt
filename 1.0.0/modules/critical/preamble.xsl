@@ -71,6 +71,25 @@
       % other settings
       \linespread{1.1}
 
+      % Critical edition sections
+      \usepackage{titlesec}
+      \titleclass{\extrasection}{straight}[\section]
+      \titleclass{\extrasubsection}{straight}[\subsection]
+      \titleformat{\extrasection}[display]
+      {\scshape\Large\fillast}
+      {}
+      {1ex minus .1ex}
+      {}
+      \titleformat{\extrasubsection}[display]
+      {\itshape\large\fillast}
+      {}
+      {1ex minus .1ex}
+      {}
+      \titlespacing{\extrasection}{20pt}{*4}{*2}[20pt]
+      \titlespacing*{\extrasubsection}{20pt}{*4}{*2}[20pt]
+      \newcounter{extrasection}
+      \newcounter{extrasubsection}
+
       <xsl:if test="private:istrue($parallel-translation)">
         <xsl:text>
           % reledpar setup
