@@ -26,10 +26,10 @@
         <xsl:variable name="lemma_text">
           <xsl:choose>
             <xsl:when test="lem/cit[quote]">
-              <xsl:value-of select="normalize-space(lem//quote[not(ancestor::bibl)])" />
+              <xsl:value-of select="normalize-space(lower-case(lem//quote[not(ancestor::bibl)]))" />
             </xsl:when>
             <xsl:otherwise>
-              <xsl:value-of select="normalize-space(lem)" />
+              <xsl:value-of select="normalize-space(lower-case(lem))" />
             </xsl:otherwise>
           </xsl:choose>
         </xsl:variable>
@@ -102,7 +102,7 @@
                gives problems with additions, where the test on identity between
                lemma and reading returns true, but I don't what that (the
                reading contains an <add>. -->
-          <xsl:if test="not($lemma_text = . or @copyOf = 'preceding::lem')
+          <xsl:if test="not($lemma_text = normalize-space(lower-case(.)) or @copyOf = 'preceding::lem')
                         or @type = 'correction-addition'
                         or private:istrue($positive-apparatus)">
             <xsl:call-template name="varianttype">
@@ -215,7 +215,7 @@
       <!-- VARIATION READINGS -->
       <!-- variation-substance -->
       <xsl:when test="@type = 'variation-substance' or not(@type)">
-        <xsl:if test="not($lemma_text = rdg)">
+        <xsl:if test="not($lemma_text = normalize-space(lower-case(rdg)))">
           <xsl:apply-templates select="."/>
         </xsl:if>
         <xsl:text> </xsl:text>
@@ -317,7 +317,7 @@
         <xsl:choose>
           <!-- addition made in <lem> element -->
           <xsl:when test="$fromLemma = 1">
-            <xsl:if test="not($lemma_text = normalize-space(.))">
+            <xsl:if test="not($lemma_text = normalize-space(lower-case(.)))">
               <xsl:apply-templates select="."/>
             </xsl:if>
           </xsl:when>
@@ -332,7 +332,7 @@
                 </xsl:call-template>
               </xsl:when>
               <!-- reading ≠ lemma -->
-              <xsl:when test="not($lemma_text = normalize-space(add))">
+              <xsl:when test="not($lemma_text = normalize-space(lower-case(add)))">
                 <xsl:apply-templates select="add"/>
               </xsl:when>
             </xsl:choose>
