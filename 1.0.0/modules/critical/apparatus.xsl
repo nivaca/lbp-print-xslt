@@ -26,7 +26,7 @@
         <xsl:variable name="lemma_text">
           <xsl:choose>
             <xsl:when test="lem/cit[quote]">
-              <xsl:value-of select="lem//text()[not(ancestor::bibl)]" />
+              <xsl:value-of select="normalize-space(lem//quote[not(ancestor::bibl)])" />
             </xsl:when>
             <xsl:otherwise>
               <xsl:value-of select="normalize-space(lem)" />
