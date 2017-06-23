@@ -66,9 +66,9 @@
             <xsl:text>}</xsl:text>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:text>\lemma{</xsl:text>
+            <xsl:text>\lemma{\textnormal{</xsl:text>
             <xsl:value-of select="$lemma_text"/>
-            <xsl:text>}</xsl:text>
+            <xsl:text>}}</xsl:text>
           </xsl:otherwise>
         </xsl:choose>
 
