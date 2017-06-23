@@ -359,21 +359,31 @@
       <!-- TODO: Take @rend and @place into considerations -->
       <xsl:when test="@type = 'correction-substitution'">
         <xsl:choose>
-          <!-- empty lemma text handling -->
-          <xsl:when test="$lemma_text = ''">
-            <xsl:call-template name="process_empty_lemma_reading">
-              <xsl:with-param name="reading_content" select="subst/add"/>
-              <xsl:with-param name="preceding_word" select="$preceding_word"/>
-            </xsl:call-template>
+          <!-- Wit is corrected to something identical to the lemma. -->
+          <xsl:when test="$lemma_text = private:format-lemma(subst/add)">
+            <xsl:apply-templates select="subst/del"/>
+            <xsl:text> \emph{a.c.} </xsl:text>
           </xsl:when>
-          <!-- lemma has content -->
+          <!-- Wit differs from lemma -->
           <xsl:otherwise>
-            <xsl:apply-templates select="subst/add"/>
+            <xsl:choose>
+              <!-- empty lemma text handling -->
+              <xsl:when test="$lemma_text = ''">
+                <xsl:call-template name="process_empty_lemma_reading">
+                  <xsl:with-param name="reading_content" select="subst/add"/>
+                  <xsl:with-param name="preceding_word" select="$preceding_word"/>
+                </xsl:call-template>
+              </xsl:when>
+              <!-- lemma has content -->
+              <xsl:otherwise>
+                <xsl:apply-templates select="subst/add"/>
+              </xsl:otherwise>
+            </xsl:choose>
+            <xsl:text> \emph{corr. ex} </xsl:text>
+            <xsl:apply-templates select="subst/del"/>
+            <xsl:text> </xsl:text>
           </xsl:otherwise>
         </xsl:choose>
-        <xsl:text> \emph{corr. ex} </xsl:text>
-        <xsl:apply-templates select="subst/del"/>
-        <xsl:text> </xsl:text>
         <xsl:call-template name="get_witness_siglum"/>
       </xsl:when>
 
