@@ -392,7 +392,7 @@
           </xsl:when>
           <xsl:otherwise>
             <xsl:choose>
-              <xsl:when test="$lemma_text = private:format-lemma(subst/add)">
+              <xsl:when test="$lemma_text = my:format-lemma(subst/add)">
                 <xsl:text> \emph{inv. a.c.} </xsl:text>
               </xsl:when>
               <xsl:otherwise>
