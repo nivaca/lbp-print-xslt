@@ -38,7 +38,7 @@
         <xsl:choose>
           <xsl:when test="self::pb">
             <xsl:if test="$withIndicator">
-              <xsl:text>|</xsl:text>
+              <xsl:text>\textnormal{|}</xsl:text>
             </xsl:if>
             <xsl:text>\ledsidenote{</xsl:text>
             <xsl:value-of select="translate(./@ed, '#', '')"/>
@@ -52,7 +52,7 @@
           <xsl:otherwise>
             <xsl:if test="not(preceding-sibling::*[1][self::pb])">
               <xsl:if test="$withIndicator">
-                <xsl:text>|</xsl:text>
+                <xsl:text>\textnormal{|}</xsl:text>
               </xsl:if>
               <xsl:text>\ledsidenote{</xsl:text>
               <xsl:value-of select="translate(./@ed, '#', '')"/>
