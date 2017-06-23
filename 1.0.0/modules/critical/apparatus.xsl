@@ -81,7 +81,7 @@
         <!-- The critical note itself. If lemma is empty, use the [nosep] option -->
         <xsl:choose>
           <xsl:when test="lem = ''">
-            <xsl:text>\Bfootnote[nosep]{</xsl:text>
+            <xsl:text>\Bfootnote{</xsl:text>
           </xsl:when>
           <xsl:otherwise>
             <xsl:text>\Bfootnote{</xsl:text>
@@ -256,10 +256,8 @@
             <xsl:text> \emph{iter.} </xsl:text>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:call-template name="process_empty_lemma_reading">
-              <xsl:with-param name="reading_content" select="."/>
-              <xsl:with-param name="preceding_word" select="$preceding_word"/>
-            </xsl:call-template>
+            <xsl:apply-templates />
+            <xsl:text> \emph{add.} </xsl:text>
           </xsl:otherwise>
         </xsl:choose>
         <xsl:call-template name="get_witness_siglum"/>
@@ -346,11 +344,8 @@
       <!-- correction-deletion -->
       <!-- TODO: Implement handling of del@rend attribute -->
       <xsl:when test="@type = 'correction-deletion'">
-        <xsl:call-template name="process_empty_lemma_reading">
-          <xsl:with-param name="reading_content" select="del"/>
-          <xsl:with-param name="preceding_word" select="$preceding_word"/>
-        </xsl:call-template>
-        <xsl:text> \emph{del.} </xsl:text>
+        <xsl:apply-templates/>
+        <xsl:text> \emph{add. et del.} </xsl:text>
         <xsl:call-template name="get_witness_siglum"/>
       </xsl:when>
 
@@ -396,10 +391,16 @@
             <xsl:text> \emph{transp.} </xsl:text>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:value-of select="tokenize(normalize-space(subst/del), ' ')[last()]"/>
-            <xsl:text> \emph{ante} </xsl:text>
-            <xsl:value-of select="tokenize(normalize-space(subst/del), ' ')[1]"/>
-            <xsl:text> \emph{transp.} </xsl:text>
+            <xsl:choose>
+              <xsl:when test="$lemma_text = private:format-lemma(subst/add)">
+                <xsl:text> \emph{inv. a.c.} </xsl:text>
+              </xsl:when>
+              <xsl:otherwise>
+                <xsl:apply-templates select="del/subst/add"/>
+                <xsl:text> \emph{corr. ex} </xsl:text>
+                <xsl:apply-templates select="del/subst/del"/>
+              </xsl:otherwise>
+            </xsl:choose>
           </xsl:otherwise>
         </xsl:choose>
         <xsl:call-template name="get_witness_siglum"/>
