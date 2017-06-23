@@ -2,7 +2,7 @@
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0" xpath-default-namespace="http://www.tei-c.org/ns/1.0"
     xmlns:tei="http://www.tei-c.org/ns/1.0"
-    xmlns:private="local functions">
+    xmlns:my="local functions">
 
   <xsl:template match="head">
     <xsl:if test="not(following-sibling::p)">
@@ -88,7 +88,7 @@
 
   <xsl:template match="div[translate(@ana, '#', '') = $structure-types/*
                        and not(@n)]">
-    <xsl:if test="private:isfalse($parallel-translation)">
+    <xsl:if test="my:isfalse($parallel-translation)">
       <!-- The parallel typesetting does not work well with manually added space
            because of syncronization -->
       <xsl:text>&#xa;\medbreak&#xa;</xsl:text>

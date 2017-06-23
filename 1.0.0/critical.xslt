@@ -2,7 +2,7 @@
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0" xpath-default-namespace="http://www.tei-c.org/ns/1.0"
     xmlns:tei="http://www.tei-c.org/ns/1.0"
-    xmlns:private="local functions">
+    xmlns:my="local functions">
 
   <xsl:import href="modules/critical/preamble.xsl"/>
   <xsl:import href="modules/critical/apparatus.xsl"/>
@@ -66,14 +66,14 @@
     <n>0</n>
   </xsl:variable>
 
-  <xsl:function name="private:istrue">
+  <xsl:function name="my:istrue">
     <xsl:param name="parameter-name"/>
     <xsl:if test="lower-case($parameter-name) = $boolean-true/*">
       <xsl:value-of select="true()"/>
     </xsl:if>
   </xsl:function>
 
-  <xsl:function name="private:isfalse">
+  <xsl:function name="my:isfalse">
     <xsl:param name="parameter-name"/>
     <xsl:if test="lower-case($parameter-name) = $boolean-false/*">
       <xsl:value-of select="true()"/>
@@ -96,7 +96,7 @@
 
   <xsl:template match="body">
     <xsl:choose>
-      <xsl:when test="private:istrue($parallel-translation)">
+      <xsl:when test="my:istrue($parallel-translation)">
         \begin{pages}
         \begin{Leftside}
         <xsl:call-template name="documentDiv">
@@ -119,8 +119,8 @@
       </xsl:otherwise>
     </xsl:choose>
     <!-- Create endnotes (`<note>`s within `<app>`). -->
-    <xsl:if test="private:istrue($include-app-notes) and
-                  private:istrue($app-notes-in-separate-apparatus)">
+    <xsl:if test="my:istrue($include-app-notes) and
+                  my:istrue($app-notes-in-separate-apparatus)">
       <xsl:text>
         \clearpage
         \section*{Critical apparatus notes}

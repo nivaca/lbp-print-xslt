@@ -2,10 +2,10 @@
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0" xpath-default-namespace="http://www.tei-c.org/ns/1.0"
     xmlns:tei="http://www.tei-c.org/ns/1.0"
-    xmlns:private="local functions">
+    xmlns:my="local functions">
 
   <xsl:template match="/">
-    <xsl:if test="private:istrue($standalone-document)">
+    <xsl:if test="my:istrue($standalone-document)">
       %this tex file was auto produced from TEI by lombardpress-print on <xsl:value-of select="current-dateTime()"/> using the  <xsl:value-of select="base-uri(document(''))"/>
       \documentclass[a4paper, <xsl:value-of select="$font-size"/>pt]{book}
 
@@ -90,7 +90,7 @@
       \newcounter{extrasection}
       \newcounter{extrasubsection}
 
-      <xsl:if test="private:istrue($parallel-translation)">
+      <xsl:if test="my:istrue($parallel-translation)">
         <xsl:text>
           % reledpar setup
           \usepackage{reledpar}
@@ -125,7 +125,7 @@
 
     <xsl:apply-templates select="//body"/>
 
-    <xsl:if test="private:istrue($standalone-document)">
+    <xsl:if test="my:istrue($standalone-document)">
       \end{document}
     </xsl:if>
   </xsl:template>

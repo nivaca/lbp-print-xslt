@@ -2,10 +2,9 @@
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0" xpath-default-namespace="http://www.tei-c.org/ns/1.0"
     xmlns:tei="http://www.tei-c.org/ns/1.0"
-    xmlns:private="local functions">
+    xmlns:my="local functions">
 
-
-  <xsl:function name="private:format-lemma">
+  <xsl:function name="my:format-lemma">
     <xsl:param name="text"/>
     <xsl:value-of select="normalize-space(lower-case($text))"/>
   </xsl:function>
@@ -15,12 +14,12 @@
     <!-- First, check if it's a spelling entry and if they should be added -->
     <xsl:choose>
       <xsl:when test="@type='variation-spelling'">
-        <xsl:if test="private:istrue($ignore-spelling-variants)">
+        <xsl:if test="my:istrue($ignore-spelling-variants)">
           <xsl:apply-templates select="lem"/>
         </xsl:if>
       </xsl:when>
       <xsl:when test="@type='insubstantial'">
-        <xsl:if test="private:isfalse($ignore-insubstantial-entries)">
+        <xsl:if test="my:isfalse($ignore-insubstantial-entries)">
           <xsl:apply-templates select="lem"/>
         </xsl:if>
       </xsl:when>
@@ -32,15 +31,15 @@
         <xsl:variable name="lemma_text">
           <xsl:choose>
             <xsl:when test="lem/cit[quote]">
-              <xsl:value-of select="private:format-lemma(lem//quote[not(ancestor::bibl)])" />
+              <xsl:value-of select="my:format-lemma(lem//quote[not(ancestor::bibl)])" />
             </xsl:when>
             <xsl:otherwise>
               <xsl:choose>
                 <xsl:when test="lem[@n]">
-                  <xsl:value-of select="private:format-lemma(lem/@n)"/>
+                  <xsl:value-of select="my:format-lemma(lem/@n)"/>
                 </xsl:when>
                 <xsl:otherwise>
-                  <xsl:value-of select="private:format-lemma(lem)" />
+                  <xsl:value-of select="my:format-lemma(lem)" />
                 </xsl:otherwise>
               </xsl:choose>
             </xsl:otherwise>
@@ -115,9 +114,9 @@
                gives problems with additions, where the test on identity between
                lemma and reading returns true, but I don't what that (the
                reading contains an <add>. -->
-          <xsl:if test="not($lemma_text = private:format-lemma(.) or @copyOf = 'preceding::lem')
+          <xsl:if test="not($lemma_text = my:format-lemma(.) or @copyOf = 'preceding::lem')
                         or @type = 'correction-addition'
-                        or private:istrue($positive-apparatus)">
+                        or my:istrue($positive-apparatus)">
             <xsl:call-template name="varianttype">
               <xsl:with-param name="preceding_word" select="$preceding_word"/>
               <xsl:with-param name="lemma_text" select="$lemma_text" />
@@ -135,11 +134,11 @@
         -->
         <xsl:choose>
           <!-- First: is there any notes, and they are not excluded -->
-          <xsl:when test="./note and private:istrue($include-app-notes)">
+          <xsl:when test="./note and my:istrue($include-app-notes)">
 
             <xsl:choose>
               <!-- Create separate note apparatus with Cfootnote -->
-              <xsl:when test="private:istrue($app-notes-in-separate-apparatus)">
+              <xsl:when test="my:istrue($app-notes-in-separate-apparatus)">
                 <!-- Close current entry and create new. -->
                 <xsl:text>}}</xsl:text>
 
@@ -210,7 +209,7 @@
       <!-- VARIATION READINGS -->
       <!-- variation-substance -->
       <xsl:when test="@type = 'variation-substance' or not(@type)">
-        <xsl:if test="not($lemma_text = private:format-lemma(rdg))">
+        <xsl:if test="not($lemma_text = my:format-lemma(rdg))">
           <xsl:apply-templates select="."/>
         </xsl:if>
         <xsl:text> </xsl:text>
@@ -219,7 +218,7 @@
 
       <!-- variation-orthography -->
       <xsl:when test="@type = 'variation-orthography'">
-        <xsl:if test="private:isfalse($ignore-spelling-variants)">
+        <xsl:if test="my:isfalse($ignore-spelling-variants)">
           <xsl:apply-templates select="."/>
           <xsl:text> </xsl:text>
           <xsl:call-template name="get_witness_siglum"/>
@@ -310,7 +309,7 @@
         <xsl:choose>
           <!-- addition made in <lem> element -->
           <xsl:when test="$fromLemma = 1">
-            <xsl:if test="not($lemma_text = private:format-lemma(.))">
+            <xsl:if test="not($lemma_text = my:format-lemma(.))">
               <xsl:apply-templates select="."/>
             </xsl:if>
           </xsl:when>
@@ -325,7 +324,7 @@
                 </xsl:call-template>
               </xsl:when>
               <!-- reading ≠ lemma -->
-              <xsl:when test="not($lemma_text = private:format-lemma(add))">
+              <xsl:when test="not($lemma_text = my:format-lemma(add))">
                 <xsl:apply-templates select="add"/>
               </xsl:when>
             </xsl:choose>
@@ -360,7 +359,7 @@
       <xsl:when test="@type = 'correction-substitution'">
         <xsl:choose>
           <!-- Wit is corrected to something identical to the lemma. -->
-          <xsl:when test="$lemma_text = private:format-lemma(subst/add)">
+          <xsl:when test="$lemma_text = my:format-lemma(subst/add)">
             <xsl:apply-templates select="subst/del"/>
             <xsl:text> \emph{a.c.} </xsl:text>
           </xsl:when>
@@ -586,7 +585,7 @@
       </xsl:for-each>
       <xsl:text>}</xsl:text>
     </xsl:if>
-    <xsl:if test="private:istrue($apparatus-numbering)">
+    <xsl:if test="my:istrue($apparatus-numbering)">
       <xsl:text> n</xsl:text><xsl:value-of select="$appnumber"></xsl:value-of>
     </xsl:if>
     <xsl:if test="following-sibling::*[1][self::rdg]">

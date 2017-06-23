@@ -2,14 +2,14 @@
 <xsl:stylesheet
     xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0" xpath-default-namespace="http://www.tei-c.org/ns/1.0"
     xmlns:tei="http://www.tei-c.org/ns/1.0"
-    xmlns:private="local functions">
+    xmlns:my="local functions">
 
   <xsl:template match="cit">
     <xsl:text>\edtext{</xsl:text>
     <xsl:apply-templates select="ref|quote"/>
     <xsl:text>}</xsl:text>
     <xsl:text>{\lemma{</xsl:text>
-    <xsl:if test="private:istrue($app-fontium-quote)">
+    <xsl:if test="my:istrue($app-fontium-quote)">
       <xsl:choose>
         <xsl:when test="count(tokenize(normalize-space(quote), ' ')) &gt; 4">
           <xsl:value-of select="tokenize(normalize-space(quote), ' ')[1]"/>
@@ -24,7 +24,7 @@
     </xsl:if>
     <xsl:text>}</xsl:text>
     <xsl:choose>
-      <xsl:when test="private:istrue($app-fontium-quote)">
+      <xsl:when test="my:istrue($app-fontium-quote)">
         <xsl:text>\Afootnote{</xsl:text>
       </xsl:when>
       <xsl:otherwise>
