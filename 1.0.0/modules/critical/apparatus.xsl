@@ -458,7 +458,7 @@
           <xsl:when test="$fromLemma = 1"/>
           <!-- Otherwise, just print -->
           <xsl:otherwise>
-            <xsl:apply-templates select="supplied"/>
+            <xsl:apply-templates select="supplied/text()"/>
           </xsl:otherwise>
         </xsl:choose>
         <xsl:if test="@source">
