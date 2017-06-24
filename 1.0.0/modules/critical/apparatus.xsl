@@ -39,7 +39,7 @@
                   <xsl:value-of select="my:format-lemma(lem/@n)"/>
                 </xsl:when>
                 <xsl:otherwise>
-                  <xsl:value-of select="my:format-lemma(lem)" />
+                  <xsl:value-of select="my:format-lemma(string-join(.//lem/text(), ''))" />
                 </xsl:otherwise>
               </xsl:choose>
             </xsl:otherwise>
