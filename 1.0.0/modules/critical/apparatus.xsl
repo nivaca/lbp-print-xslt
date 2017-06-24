@@ -448,13 +448,6 @@
       <!-- conjecture-supplied -->
       <xsl:when test="@type = 'conjecture-supplied'">
         <xsl:choose>
-          <!-- Empty lemma handling -->
-          <xsl:when test="$lemma_text = ''">
-            <xsl:call-template name="process_empty_lemma_reading">
-              <xsl:with-param name="reading_content" select="supplied/node()"/>
-              <xsl:with-param name="preceding_word" select="$preceding_word"/>
-            </xsl:call-template>
-          </xsl:when>
           <!-- If we come from lemma element, don't print the content of it -->
           <xsl:when test="$fromLemma = 1"/>
           <!-- Otherwise, just print -->
