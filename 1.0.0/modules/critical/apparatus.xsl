@@ -19,7 +19,7 @@
         </xsl:if>
       </xsl:when>
       <xsl:when test="@type='insubstantial'">
-        <xsl:if test="my:isfalse($ignore-insubstantial-entries)">
+        <xsl:if test="my:istrue($ignore-insubstantial-entries)">
           <xsl:apply-templates select="lem"/>
         </xsl:if>
       </xsl:when>
