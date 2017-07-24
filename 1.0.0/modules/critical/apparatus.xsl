@@ -11,8 +11,13 @@
 
   <!-- THE APPARATUS HANDLING -->
   <xsl:template match="app">
-    <!-- First, check if it's a spelling entry and if they should be added -->
+    <!-- First, check if we even need an apparatus entry: If the critical
+         apparatus is disabled altogether or it's a spelling or insubstantial
+         entry that is disabled, just print the content of the lem -->
     <xsl:choose>
+      <xsl:when test="my:isfalse($create-critical-apparatus)">
+        <xsl:apply-templates select="lem"/>
+      </xsl:when>
       <xsl:when test="@type='variation-spelling'">
         <xsl:if test="my:istrue($ignore-spelling-variants)">
           <xsl:apply-templates select="lem"/>
