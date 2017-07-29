@@ -81,7 +81,7 @@
         <!-- The critical note itself. If lemma is empty, use the [nosep] option -->
         <xsl:choose>
           <xsl:when test="lem = ''">
-            <xsl:text>\Bfootnote{</xsl:text>
+            <xsl:text>\Bfootnote[nosep]{</xsl:text>
           </xsl:when>
           <xsl:otherwise>
             <xsl:text>\Bfootnote{</xsl:text>
@@ -256,8 +256,10 @@
             <xsl:text> \emph{iter.} </xsl:text>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:apply-templates />
-            <xsl:text> \emph{add.} </xsl:text>
+            <xsl:call-template name="process_empty_lemma_reading">
+              <xsl:with-param name="reading_content" select="."/>
+              <xsl:with-param name="preceding_word" select="$preceding_word"/>
+            </xsl:call-template>
           </xsl:otherwise>
         </xsl:choose>
         <xsl:call-template name="get_witness_siglum"/>
@@ -344,8 +346,11 @@
       <!-- correction-deletion -->
       <!-- TODO: Implement handling of del@rend attribute -->
       <xsl:when test="@type = 'correction-deletion'">
-        <xsl:apply-templates/>
-        <xsl:text> \emph{add. et del.} </xsl:text>
+        <xsl:call-template name="process_empty_lemma_reading">
+          <xsl:with-param name="reading_content" select="del"/>
+          <xsl:with-param name="preceding_word" select="$preceding_word"/>
+        </xsl:call-template>
+        <xsl:text> \emph{del.} </xsl:text>
         <xsl:call-template name="get_witness_siglum"/>
       </xsl:when>
 
