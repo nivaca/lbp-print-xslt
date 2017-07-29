@@ -38,7 +38,6 @@
   <xsl:param name="app-entry-separator">;</xsl:param>
   <xsl:param name="font-size">12</xsl:param>
   <xsl:param name="ignore-spelling-variants">no</xsl:param>
-  <xsl:param name="ignore-insubstantial-entries">no</xsl:param>
   <xsl:param name="positive-apparatus">no</xsl:param>
   <xsl:param name="create-critical-apparatus">yes</xsl:param>
   <xsl:param name="apparatus-numbering">no</xsl:param>
