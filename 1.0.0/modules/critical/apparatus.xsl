@@ -459,10 +459,6 @@
           <xsl:text> \emph{suppl.}</xsl:text>
           <xsl:text> </xsl:text>
           <xsl:call-template name="get_witness_siglum"/>
-          <xsl:if test="following-sibling::*">
-            <xsl:value-of select="$app-entry-separator"/>
-            <xsl:text> </xsl:text>
-          </xsl:if>
         </xsl:if>
       </xsl:when>
 
@@ -487,10 +483,6 @@
           <xsl:text> </xsl:text>
           <xsl:call-template name="get_witness_siglum"/>
         </xsl:if>
-        <xsl:if test="following-sibling::*">
-          <xsl:value-of select="$app-entry-separator"/>
-          <xsl:text> </xsl:text>
-        </xsl:if>
       </xsl:when>
 
       <!-- conjecture-corrected -->
@@ -506,10 +498,6 @@
           <xsl:text> \emph{conj.} </xsl:text>
           <xsl:call-template name="get_witness_siglum"/>
           <xsl:text> </xsl:text>
-          <xsl:if test="following-sibling::*">
-            <xsl:value-of select="$app-entry-separator"/>
-            <xsl:text> </xsl:text>
-          </xsl:if>
         </xsl:if>
       </xsl:when>
 
