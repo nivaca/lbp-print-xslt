@@ -115,7 +115,7 @@
         \Pages
       </xsl:when>
       <xsl:otherwise>
-        <xsl:apply-templates/>
+        <xsl:apply-templates select="//body/div"/>
       </xsl:otherwise>
     </xsl:choose>
     <!-- Create endnotes (`<note>`s within `<app>`). -->
