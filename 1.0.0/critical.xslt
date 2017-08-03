@@ -498,10 +498,15 @@
   <xsl:template match="mentioned">`<xsl:apply-templates/>'</xsl:template>
   <xsl:template match="sic[@ana='#crux']">\corruption{<xsl:apply-templates/>}</xsl:template>
 
+  <xsl:template match="rdg/cb | rdg/pb">
+    <xsl:text>|</xsl:text>
+  </xsl:template>
+
   <xsl:template match="pb | cb" name="createPageColumnBreak">
     <xsl:param name="context" select="."/>
     <xsl:param name="withIndicator" select="true()"/>
     <xsl:param name="inParallelText" />
+    <xsl:param name="with-siglum" select="true()"/>
     <xsl:if test="not($inParallelText)">
       <xsl:for-each select="$context">
         <xsl:choose>
@@ -509,26 +514,38 @@
             <xsl:if test="$withIndicator">
               <xsl:text>\textnormal{|}</xsl:text>
             </xsl:if>
-            <xsl:text>\ledsidenote{</xsl:text>
-            <xsl:value-of select="translate(./@ed, '#', '')"/>
+            <xsl:if test="not(parent::rdg)">
+              <xsl:text>\ledsidenote{</xsl:text>
+            </xsl:if>
+            <xsl:if test="$with-siglum">
+              <xsl:value-of select="translate(./@ed, '#', '')"/>
+            </xsl:if>
             <xsl:text> </xsl:text>
             <xsl:value-of select="translate(./@n, '-', '')"/>
             <xsl:if test="following-sibling::*[1][self::cb]">
               <xsl:value-of select="following-sibling::cb[1]/@n"/>
             </xsl:if>
-            <xsl:text>}</xsl:text>
+            <xsl:if test="not(parent::rdg)">
+              <xsl:text>}</xsl:text>
+            </xsl:if>
           </xsl:when>
           <xsl:otherwise>
             <xsl:if test="not(preceding-sibling::*[1][self::pb])">
               <xsl:if test="$withIndicator">
                 <xsl:text>\textnormal{|}</xsl:text>
               </xsl:if>
-              <xsl:text>\ledsidenote{</xsl:text>
-              <xsl:value-of select="translate(./@ed, '#', '')"/>
+              <xsl:if test="not(parent::rdg)">
+                <xsl:text>\ledsidenote{</xsl:text>
+              </xsl:if>
+              <xsl:if test="$with-siglum">
+                <xsl:value-of select="translate(./@ed, '#', '')"/>
+              </xsl:if>
               <xsl:text> </xsl:text>
               <xsl:value-of select="translate(preceding::pb[./@ed = $context/@ed][1]/@n, '-', '')"/>
               <xsl:value-of select="./@n"/>
-              <xsl:text>}</xsl:text>
+              <xsl:if test="not(parent::rdg)">
+                <xsl:text>}</xsl:text>
+              </xsl:if>
             </xsl:if>
           </xsl:otherwise>
         </xsl:choose>
@@ -1046,12 +1063,20 @@
           <xsl:text> </xsl:text>
         </xsl:if>
       </xsl:when>
-
       <xsl:otherwise>
         <xsl:apply-templates select="."/><xsl:text> </xsl:text>
         <xsl:call-template name="get_witness_siglum"/>
       </xsl:otherwise>
     </xsl:choose>
+    <xsl:if test="cb|pb">
+      <xsl:text>(</xsl:text>
+      <xsl:call-template name="createPageColumnBreak">
+        <xsl:with-param name="withIndicator" select="false()"/>
+        <xsl:with-param name="context" select="cb|pb"/>
+        <xsl:with-param name="with-siglum" select="false()"/>
+      </xsl:call-template>
+      <xsl:text>)</xsl:text>
+    </xsl:if>
     <xsl:if test="note">
       <xsl:text> (</xsl:text>
       <xsl:apply-templates select="note"/>
