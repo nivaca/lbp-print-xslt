@@ -4,6 +4,10 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Changed
+- Improved handling of empty lemmata.
+- Add very simple handling of <note> elements. They are converted into `\footnote{}`s.
+
 
 ## [0.0.1] -- 2017-08-04
 ### Added

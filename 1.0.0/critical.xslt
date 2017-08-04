@@ -497,6 +497,7 @@
   <xsl:template match="app//mentioned">\emph{<xsl:apply-templates/>}</xsl:template>
   <xsl:template match="mentioned">`<xsl:apply-templates/>'</xsl:template>
   <xsl:template match="sic[@ana='#crux']">\corruption{<xsl:apply-templates/>}</xsl:template>
+  <xsl:template match="note">\footnote{<xsl:apply-templates/>}</xsl:template>
 
   <xsl:template match="rdg/cb | rdg/pb">
     <xsl:text>|</xsl:text>
@@ -591,6 +592,7 @@
             <xsl:when test="lem/cit[quote]">
               <xsl:value-of select="my:format-lemma(lem//quote[not(ancestor::bibl)])" />
             </xsl:when>
+            <xsl:when test="lem = ''"/>
             <xsl:otherwise>
               <xsl:choose>
                 <xsl:when test="lem[@n]">
@@ -623,9 +625,9 @@
             <xsl:text>}</xsl:text>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:text>\lemma{\textnormal{</xsl:text>
+            <xsl:text>\lemma{</xsl:text>
             <xsl:value-of select="$lemma_text"/>
-            <xsl:text>}}</xsl:text>
+            <xsl:text>}</xsl:text>
           </xsl:otherwise>
         </xsl:choose>
 
