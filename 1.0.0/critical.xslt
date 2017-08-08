@@ -39,6 +39,7 @@
   <xsl:param name="include-app-notes">no</xsl:param>
   <xsl:param name="app-notes-in-separate-apparatus">yes</xsl:param>
   <xsl:param name="standalone-document">yes</xsl:param>
+  <xsl:param name="create-structure-numbers">no</xsl:param>
 
   <!--
       Boolean check lists.
@@ -385,57 +386,60 @@
   </xsl:template>
 
   <xsl:param name="structure-types">
+    <n>rationes-principales</n>
     <n>rationes-principales-pro</n>
     <n>rationes-principales-contra</n>
     <n>determinatio</n>
-    <n>ad-rationes-contra</n>
+    <n>ad-rationes</n>
   </xsl:param>
 
-  <xsl:template name="createStructureNumber">
-    <xsl:variable name="ana-value" select="translate(@ana, '#', '')"/>
-    <!--
-        1. if p.type
-        type-name = p@type.value
-        1.1 if p.n (= subsection)
-        section-number = p@n.value
-        2. elif parent::div@type and current p = first p in div
-        type-name = parent::div@type.value
-        2.1 if parent::div@n
-        section-number = parent::div@n.value
-    -->
+  <xsl:function name="my:struct-elem">
+    <xsl:param name="ana-value"/>
+    <xsl:if test="translate($ana-value, '#', '') = $structure-types/*">
+      <xsl:value-of select="true()"/>
+    </xsl:if>
+  </xsl:function>
+
+
+  <!-- TODO: FIND a way of making references -->
+  <!-- TODO: Make the number generation more generic (recursive) -->
+  <xsl:template name="create-structure-number">
     <xsl:choose>
-      <xsl:when test="$ana-value = $structure-types/*">
-        <xsl:choose>
-          <xsl:when test="@n">
-            <xsl:call-template name="printStructureNumber">
-              <xsl:with-param name="type-name" select="$ana-value"/>
-              <xsl:with-param name="section-number" select="@n"/>
-            </xsl:call-template>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:call-template name="printStructureNumber">
-              <xsl:with-param name="type-name" select="$ana-value"/>
-            </xsl:call-template>
-          </xsl:otherwise>
-        </xsl:choose>
+      <!-- p as structure element -->
+      <xsl:when test="my:struct-elem(@ana)">
+        <xsl:call-template name="print-structure-number">
+          <xsl:with-param name="section-number">
+            <xsl:number select="." count="div[my:struct-elem(@ana)]|p[my:struct-elem(@ana)]"/>
+          </xsl:with-param>
+        </xsl:call-template>
       </xsl:when>
-      <xsl:when test="(parent::div[1]/translate(@ana, '#', '') = $structure-types/*) and
-                      (position() = 1)">
-        <xsl:choose>
-          <xsl:when test="parent::div[1]/@n">
-            <xsl:call-template name="printStructureNumber">
-              <xsl:with-param name="type-name"
-                              select="parent::div[1]/translate(@ana, '#', '')"/>
-              <xsl:with-param name="section-number" select="parent::div[1]/@n"/>
-            </xsl:call-template>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:call-template name="printStructureNumber">
-              <xsl:with-param name="type-name"
-                              select="parent::div[1]/translate(@ana, '#', '')"/>
-            </xsl:call-template>
-          </xsl:otherwise>
-        </xsl:choose>
+      <!-- p as child of structure div -->
+      <xsl:when test="ancestor::div[translate(@ana, '#', '') = $structure-types/*] and
+                      not(parent::div[not(translate(@ana, '#', '') = $structure-types/*)])">
+        <xsl:call-template name="print-structure-number">
+          <xsl:with-param name="section-number">
+            <xsl:number select="ancestor::div[translate(@ana, '#', '') = $structure-types/*]"
+                        count="div[my:struct-elem(@ana)]|p[my:struct-elem(@ana)]"/>
+            <xsl:if test="not(@ana = '#structure-head')">
+              <xsl:text>.</xsl:text>
+              <xsl:number select="." count="p[not(@ana = '#structure-head')]"/>
+            </xsl:if>
+          </xsl:with-param>
+        </xsl:call-template>
+      </xsl:when>
+      <!-- p inside div inside structure div -->
+      <xsl:when test="ancestor::div[translate(@ana, '#', '') = $structure-types/*] and
+                      parent::div[not(translate(@ana, '#', '') = $structure-types/*)]">
+        <xsl:if test="position() = 1">
+          <xsl:call-template name="print-structure-number">
+            <xsl:with-param name="section-number">
+              <xsl:number select="ancestor::div[translate(@ana, '#', '') = $structure-types/*]"
+                          count="div[my:struct-elem(@ana)]|p[my:struct-elem(@ana)]"/>
+              <xsl:text>.</xsl:text>
+              <xsl:number select="parent::div" count="div|p"/>
+            </xsl:with-param>
+          </xsl:call-template>
+        </xsl:if>
       </xsl:when>
       <!-- No structure number should be printed, so just make a linebreak -->
       <xsl:otherwise>
@@ -444,33 +448,16 @@
     </xsl:choose>
   </xsl:template>
 
-  <xsl:template name="printStructureNumber">
-    <xsl:param name="type-name"/>
+  <xsl:template name="print-structure-number">
     <xsl:param name="section-number"/>
-    <xsl:text>
-    \no{</xsl:text>
-    <xsl:choose>
-      <xsl:when test="$type-name = 'rationes-principales-pro'">
-        <xsl:text>2</xsl:text>
-      </xsl:when>
-      <xsl:when test="$type-name = 'rationes-principales-contra'">
-        <xsl:text>1</xsl:text>
-      </xsl:when>
-      <xsl:when test="$type-name = 'determinatio'">
-        <xsl:text>3</xsl:text>
-      </xsl:when>
-      <xsl:when test="$type-name = 'ad-rationes-contra'">
-        <xsl:text>Ad 1</xsl:text>
-      </xsl:when>
-    </xsl:choose>
     <xsl:if test="$section-number">
-      <xsl:text>.</xsl:text>
+      <xsl:text>
+      \no{</xsl:text>
       <xsl:value-of select="$section-number"/>
+      <xsl:text>}
+      </xsl:text>
     </xsl:if>
-    <xsl:text>}
-    </xsl:text>
   </xsl:template>
-
 
   <!-- INLINE ELEMENTS -->
   <!-- Wrap supplied, secluded, notes, and unclear in appropriate tex macros -->

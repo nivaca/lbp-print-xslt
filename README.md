@@ -47,6 +47,32 @@ different programmatic publication and processing workflows can make some basic
 assumptions about the XSLT packages that are used, irrespective of where the
 package comes from. 
 
+## Representation and conversion
+
+### Structural units and numbering
+
+Important structural numbers should be computed and available for reference and
+cross-reference that can be rendered in the resulting PDF.
+
+The basic principle is to use `<div>`s inside the main containing `<div>`. Each
+`<div>` below that indicate a structural group.
+
+#### *Rationes principales*
+
+- A `div` with the `@ana`-value `rationes-principales` indicate that the `div`
+  contains *rationes principales*.
+- Any subsequent `p` will be considered a single and complete *ratio*, unless it
+  is contained in another `div`. 
+- Groups of `p`s contained by another `div` will together constitute a *ratio*.
+
+Numbering:
+
+- Sections of *rationes* will be numbered sequentially such that each `p` of
+  child `div` of a `div[@ana='rationes-principales']` gets an incremented
+  sub-number (e.g. "1.1", "1.2", "1.3" etc.).
+- Any `p` with the `@ana` value `structure-head` will not get a sub-number.
+
+
 ## Contributing
 
 Of course, pull requests or issue reports with this package are very welcome in
