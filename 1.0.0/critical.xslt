@@ -40,6 +40,7 @@
   <xsl:param name="app-notes-in-separate-apparatus">yes</xsl:param>
   <xsl:param name="standalone-document">yes</xsl:param>
   <xsl:param name="create-structure-numbers">no</xsl:param>
+  <xsl:param name="title-heading-level">section*</xsl:param>
 
   <!--
       Boolean check lists.
@@ -285,6 +286,9 @@
       \setlength{\headheight}{15pt}
 
     </xsl:if>
+
+
+    \<xsl:value-of select="$title-heading-level"/>{<xsl:value-of select="$author"/>: <xsl:value-of select="$title"/>}
 
     <xsl:apply-templates select="//body"/>
 
