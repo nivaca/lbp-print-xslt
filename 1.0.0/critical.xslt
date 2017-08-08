@@ -331,22 +331,22 @@
       </xsl:if>
       <xsl:text>]</xsl:text>
     </xsl:if>
-    <xsl:text>&#xa;</xsl:text>
     <xsl:call-template name="createLabelFromId">
       <xsl:with-param name="labelType">start</xsl:with-param>
     </xsl:call-template>
+    <xsl:text>&#xa;</xsl:text>
     <xsl:if test="$pn='1'">
-      <xsl:text>&#xa;</xsl:text>
       <xsl:call-template name="createPageColumnBreak">
         <xsl:with-param name="withIndicator" select="false()"/>
         <xsl:with-param name="context" select="$starts_on"/>
         <xsl:with-param name="inParallelText" select="$inParallelText"/>
       </xsl:call-template>
-      <xsl:text>%</xsl:text>
+      <xsl:text>%&#xa;</xsl:text>
     </xsl:if>
-    <xsl:call-template name="createStructureNumber"/>
+    <xsl:if test="my:istrue($create-structure-numbers)">
+      <xsl:call-template name="create-structure-number"/>
+    </xsl:if>
     <xsl:apply-templates/>
-    <xsl:text>%&#xa;</xsl:text>
     <xsl:call-template name="createLabelFromId">
       <xsl:with-param name="labelType">end</xsl:with-param>
     </xsl:call-template>
@@ -362,6 +362,7 @@
   <xsl:template name="createLabelFromId">
     <xsl:param name="labelType" />
     <xsl:if test="@xml:id">
+      <xsl:text>%&#xa;</xsl:text>
       <xsl:choose>
         <xsl:when test="$labelType='start'">
           <xsl:text>\edlabelS{</xsl:text>
