@@ -270,14 +270,19 @@
       \newcommand{\no}[1]{\emph{#1}\quad}
       \newcommand{\corruption}[1]{\textdagger#1\textdagger}
 
+      <xsl:if test="/TEI/teiHeader/revisionDesc/@status = 'draft'">
+        \usepackage{draftwatermark}
+        \SetWatermarkText{DRAFT}
+        \SetWatermarkFontSize{3.5cm}
+        \SetWatermarkColor[gray]{0.9}
+      </xsl:if>
+
+
       \begin{document}
       \fancyhead{}
       \fancyfoot[C]{\thepage}
       \fancyhead[R]{<xsl:value-of select="$title"/>}
       \fancyhead[L]{<xsl:value-of select="$author"/>}
-      <xsl:if test="/TEI/teiHeader/revisionDesc/@status = 'draft'">
-        \fancyhead[C]{DRAFT}
-      </xsl:if>
 
       \chapter*{<xsl:value-of select="$author"/>: <xsl:value-of select="$title"/>}
       \addcontentsline{toc}{chapter}{<xsl:value-of select="$title"/>}
