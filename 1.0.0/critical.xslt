@@ -281,11 +281,9 @@
       \begin{document}
       \fancyhead{}
       \fancyfoot[C]{\thepage}
-      \fancyhead[R]{<xsl:value-of select="$title"/>}
-      \fancyhead[L]{<xsl:value-of select="$author"/>}
+      \fancyhead[L]{<xsl:value-of select="$author"/>: <xsl:value-of select="$title"/>}
+      \setlength{\headheight}{15pt}
 
-      \chapter*{<xsl:value-of select="$author"/>: <xsl:value-of select="$title"/>}
-      \addcontentsline{toc}{chapter}{<xsl:value-of select="$title"/>}
     </xsl:if>
 
     <xsl:apply-templates select="//body"/>
