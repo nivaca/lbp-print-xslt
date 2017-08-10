@@ -39,7 +39,7 @@
   <xsl:param name="include-app-notes">no</xsl:param>
   <xsl:param name="app-notes-in-separate-apparatus">yes</xsl:param>
   <xsl:param name="standalone-document">yes</xsl:param>
-  <xsl:param name="create-structure-numbers">no</xsl:param>
+  <xsl:param name="create-structure-numbers">yes</xsl:param>
   <xsl:param name="title-heading-level">section*</xsl:param>
 
   <!--
@@ -422,26 +422,26 @@
         </xsl:call-template>
       </xsl:when>
       <!-- p as child of structure div -->
-      <xsl:when test="ancestor::div[translate(@ana, '#', '') = $structure-types/*] and
-                      not(parent::div[not(translate(@ana, '#', '') = $structure-types/*)])">
+      <xsl:when test="ancestor::div[my:struct-elem(@ana)] and
+                      parent::div[my:struct-elem(@ana)]">
         <xsl:call-template name="print-structure-number">
           <xsl:with-param name="section-number">
-            <xsl:number select="ancestor::div[translate(@ana, '#', '') = $structure-types/*]"
+            <xsl:number select="ancestor::div[my:struct-elem(@ana)]"
                         count="div[my:struct-elem(@ana)]|p[my:struct-elem(@ana)]"/>
             <xsl:if test="not(@ana = '#structure-head')">
               <xsl:text>.</xsl:text>
-              <xsl:number select="." count="p[not(@ana = '#structure-head')]"/>
+              <xsl:number select="." count="p[not(@ana = '#structure-head')]|div"/>
             </xsl:if>
           </xsl:with-param>
         </xsl:call-template>
       </xsl:when>
       <!-- p inside div inside structure div -->
-      <xsl:when test="ancestor::div[translate(@ana, '#', '') = $structure-types/*] and
-                      parent::div[not(translate(@ana, '#', '') = $structure-types/*)]">
+      <xsl:when test="ancestor::div[my:struct-elem(@ana)] and
+                      parent::div[not(my:struct-elem(@ana))]">
         <xsl:if test="position() = 1">
           <xsl:call-template name="print-structure-number">
             <xsl:with-param name="section-number">
-              <xsl:number select="ancestor::div[translate(@ana, '#', '') = $structure-types/*]"
+              <xsl:number select="ancestor::div[my:struct-elem(@ana)]"
                           count="div[my:struct-elem(@ana)]|p[my:struct-elem(@ana)]"/>
               <xsl:text>.</xsl:text>
               <xsl:number select="parent::div" count="div|p"/>
