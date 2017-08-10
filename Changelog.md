@@ -7,10 +7,15 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 ### Added
 - Add very simple handling of <note> elements. They are converted into
   `\footnote{}`s.
+- Make it possible to configure the structural level (e.g. `chapter` or
+  `section`) in headings created from `<head>` elements.
 
 ### Changed
 - Improved handling of empty lemmata.
 - Change handling of structure numberings and add documentation.
+- Linebreaks in paragraph construction has been improved.
+- Change presentation of header and how draft text are marked (now with
+  watermark) to better accommodate long titles in the header.
 
 
 ## [0.0.1] -- 2017-08-04
