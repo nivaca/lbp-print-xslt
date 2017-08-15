@@ -670,6 +670,7 @@
                lemma and reading returns true, but I don't what that (the
                reading contains an <add>. -->
           <xsl:if test="not($lemma_text = my:format-lemma(.) or @copyOf = 'preceding::lem')
+                        or unclear
                         or @type = 'correction-addition'
                         or my:istrue($positive-apparatus)">
             <xsl:call-template name="varianttype">
@@ -1096,9 +1097,6 @@
   <!--   <xsl:text>}</xsl:text> -->
   <!-- </xsl:template> -->
 
-  <!-- Unclear in readings adds an "ut vid." to the note -->
-  <xsl:template match="rdg//unclear"><xsl:apply-templates/> \emph{ut vid.}</xsl:template>
-
   <!-- APPARATUS HELPER TEMPLATES -->
   <xsl:template name="process_empty_lemma_reading">
     <xsl:param name="reading_content"/>
@@ -1118,6 +1116,10 @@
       <xsl:text>\emph{</xsl:text>
       <xsl:apply-templates select="following-sibling::witDetail[translate(@wit, '#', '')=$witness-id]"/>
       <xsl:text>} </xsl:text>
+    </xsl:if>
+    <!-- Then note if the reading is uncertain -->
+    <xsl:if test="unclear">
+      <xsl:text> \emph{lectio incerta} </xsl:text>
     </xsl:if>
     <xsl:value-of select="translate(@wit, '#', '')"/>
     <xsl:text> </xsl:text>
