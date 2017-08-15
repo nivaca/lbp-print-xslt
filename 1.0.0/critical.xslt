@@ -652,7 +652,7 @@
             TODO: Should all reading types be possible in the lemma? Any? It is
             implied by the possibility of having @wit in lemma.
         -->
-        <xsl:if test="lem/@type">
+        <xsl:if test="lem/@wit or lem/@source">
           <!-- This loop is stupid, but I need to have the lem-element as the root
                node when handling the variants. -->
           <xsl:for-each select="./lem">
