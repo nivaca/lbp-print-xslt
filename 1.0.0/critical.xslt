@@ -765,7 +765,7 @@
       <!-- VARIATION READINGS -->
       <!-- variation-substance -->
       <xsl:when test="@type = 'variation-substance' or not(@type)">
-        <xsl:if test="not($lemma_text = my:format-lemma(rdg))">
+        <xsl:if test="not($lemma_text = my:format-lemma(.))">
           <xsl:apply-templates select="."/>
         </xsl:if>
         <xsl:text> </xsl:text>

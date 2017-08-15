@@ -21,6 +21,9 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Change presentation of header and how draft text are marked (now with
   watermark) to better accommodate long titles in the header.
 
+### Fixed
+- Identity test between lemma text and reading content should call current
+  context `<rdg>` not a child `<rdg>`.
 
 ## [0.0.1] -- 2017-08-04
 ### Added
