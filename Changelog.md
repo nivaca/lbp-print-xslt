@@ -11,6 +11,8 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
   `section`) in headings created from `<head>` elements.
 
 ### Changed
+- `@type = 'conjecture-corrected'` is phrased differently to accommodate
+  conjectures by the current editor that are not included in the main text.
 - Improved handling of empty lemmata.
 - Change handling of structure numberings and add documentation.
 - Linebreaks in paragraph construction has been improved.

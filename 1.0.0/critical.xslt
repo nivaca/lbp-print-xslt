@@ -1052,19 +1052,22 @@
           <xsl:when test="$fromLemma = 1"/>
           <xsl:otherwise>
             <xsl:apply-templates select="corr"/>
+            <xsl:text> \emph{conj.} </xsl:text>
           </xsl:otherwise>
         </xsl:choose>
         <xsl:if test="@source">
-          <xsl:text> \emph{conj.} </xsl:text>
-          <xsl:call-template name="get_witness_siglum"/>
           <xsl:text> </xsl:text>
+          <xsl:call-template name="get_witness_siglum"/>
         </xsl:if>
       </xsl:when>
+
+      <!-- fallback: If no type matches, print the content and the siglum. -->
       <xsl:otherwise>
         <xsl:apply-templates select="."/><xsl:text> </xsl:text>
         <xsl:call-template name="get_witness_siglum"/>
       </xsl:otherwise>
     </xsl:choose>
+
     <xsl:if test="cb|pb">
       <xsl:text>(</xsl:text>
       <xsl:call-template name="createPageColumnBreak">
@@ -1074,6 +1077,7 @@
       </xsl:call-template>
       <xsl:text>)</xsl:text>
     </xsl:if>
+
     <xsl:if test="note">
       <xsl:text> (</xsl:text>
       <xsl:apply-templates select="note"/>
