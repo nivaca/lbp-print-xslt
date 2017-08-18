@@ -3,6 +3,11 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.0.3] -- 2017-08-18
+### Fixed
+- Make sure input to `my:format-lemma` is string when instantiating
+  `$lemma_text` variable.
+
 ## [0.0.2] -- 2017-08-15
 ### Added
 - Add very simple handling of <note> elements. They are converted into
