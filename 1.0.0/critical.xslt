@@ -167,7 +167,7 @@
   <!-- PREAMBLE -->
   <xsl:template match="/">
     <xsl:if test="my:istrue($standalone-document)">
-      %this tex file was auto produced from TEI by lombardpress-print on <xsl:value-of select="current-dateTime()"/> using the  <xsl:value-of select="base-uri(document(''))"/>
+      %this tex file was auto produced from TEI by lbp_print on <xsl:value-of select="current-dateTime()"/> 
       \documentclass[a4paper, <xsl:value-of select="$font-size"/>pt]{book}
 
       % imakeidx must be loaded beore eledmac

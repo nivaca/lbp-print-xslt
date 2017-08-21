@@ -3,6 +3,12 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [unreleased]
+
+### Changed
+- The latex preamble no longer outputs full directory path of the conversion
+  document.
+
 ## [0.0.3] -- 2017-08-18
 ### Fixed
 - Make sure input to `my:format-lemma` is string when instantiating
