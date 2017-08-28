@@ -62,7 +62,8 @@ The basic principle is to use `<div>`s inside the main containing `<div>`. Each
 - A `div` with the `@ana`-value `rationes-principales` indicate that the `div`
   contains *rationes principales*.
 - Any subsequent `p` will be considered a single and complete *ratio*, unless it
-  is contained in another `div`. 
+  is contained in another `div` or it has the `@ana` attribute set to
+  `structure-head`.
 - Groups of `p`s contained by another `div` will together constitute a *ratio*.
 
 Numbering:
