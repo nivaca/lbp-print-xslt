@@ -4,6 +4,9 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
 ## [unreleased]
+### Added
+- Support for indication of *lacunas* with `<gap type="lacuna">`. No support for
+  extent or critical notes yet.
 
 ### Changed
 - The latex preamble no longer outputs full directory path of the conversion

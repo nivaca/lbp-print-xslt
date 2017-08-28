@@ -270,6 +270,7 @@
       \newcommand{\del}[1]{[#1 del. ms]}
       \newcommand{\no}[1]{\emph{#1}\quad}
       \newcommand{\corruption}[1]{\textdagger#1\textdagger}
+      \newcommand{\lacuna}{\supplied{\textasteriskcentered\textasteriskcentered\textasteriskcentered}}
 
       <xsl:if test="/TEI/teiHeader/revisionDesc/@status = 'draft'">
         \usepackage{draftwatermark}
@@ -493,6 +494,7 @@
   <xsl:template match="mentioned">`<xsl:apply-templates/>'</xsl:template>
   <xsl:template match="sic[@ana='#crux']">\corruption{<xsl:apply-templates/>}</xsl:template>
   <xsl:template match="note">\footnote{<xsl:apply-templates/>}</xsl:template>
+  <xsl:template match="gap[@type='lacuna']">\lacuna{}</xsl:template>
 
   <xsl:template match="rdg/cb | rdg/pb">
     <xsl:text>|</xsl:text>
