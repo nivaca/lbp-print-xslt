@@ -335,14 +335,13 @@
     <xsl:call-template name="createLabelFromId">
       <xsl:with-param name="labelType">start</xsl:with-param>
     </xsl:call-template>
-    <xsl:text>&#xa;</xsl:text>
     <xsl:if test="$pn='1'">
+      <xsl:text>&#xa;</xsl:text>
       <xsl:call-template name="createPageColumnBreak">
         <xsl:with-param name="withIndicator" select="false()"/>
         <xsl:with-param name="context" select="$starts_on"/>
         <xsl:with-param name="inParallelText" select="$inParallelText"/>
       </xsl:call-template>
-      <xsl:text>%&#xa;</xsl:text>
     </xsl:if>
     <xsl:if test="my:istrue($create-structure-numbers)">
       <xsl:call-template name="create-structure-number"/>
