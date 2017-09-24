@@ -57,6 +57,15 @@ cross-reference that can be rendered in the resulting PDF.
 The basic principle is to use `<div>`s inside the main containing `<div>`. Each
 `<div>` below that indicate a structural group.
 
+A structural type is given in the `@ana` attribute. The following are
+recognized:
+- rationes-principales
+- rationes-principales-pro
+- rationes-principales-contra
+- determinatio
+- ad-rationes
+
+
 #### *Rationes principales*
 
 - A `div` with the `@ana`-value `rationes-principales` indicate that the `div`
