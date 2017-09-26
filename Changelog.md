@@ -3,6 +3,10 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Changed
+- Line breaking procedure in paragraphing is updated again.
+
 ## [0.0.4] -- 2017-09-02
 ### Added
 - Support for indication of *lacunas* with `<gap type="lacuna">`. No support for
