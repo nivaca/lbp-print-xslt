@@ -456,13 +456,13 @@
     </xsl:choose>
   </xsl:template>
 
+
   <xsl:template name="print-structure-number">
     <xsl:param name="section-number"/>
     <xsl:if test="$section-number">
-      <xsl:text>
-      \no{</xsl:text>
+      <xsl:text>\no{</xsl:text>
       <xsl:value-of select="$section-number"/>
-      <xsl:text>}
+      <xsl:text>}%
       </xsl:text>
     </xsl:if>
   </xsl:template>
