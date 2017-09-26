@@ -444,7 +444,7 @@
               <xsl:number select="ancestor::div[my:struct-elem(@ana)]"
                           count="div[my:struct-elem(@ana)]|p[my:struct-elem(@ana)]"/>
               <xsl:text>.</xsl:text>
-              <xsl:number select="parent::div" count="div|p"/>
+              <xsl:number select="parent::div" count="p[not(@ana = '#structure-head')]|div"/>
             </xsl:with-param>
           </xsl:call-template>
         </xsl:if>
