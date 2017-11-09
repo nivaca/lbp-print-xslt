@@ -40,7 +40,7 @@
   <xsl:param name="app-notes-in-separate-apparatus">yes</xsl:param>
   <xsl:param name="standalone-document">yes</xsl:param>
   <xsl:param name="create-structure-numbers">yes</xsl:param>
-  <xsl:param name="title-heading-level">section*</xsl:param>
+  <xsl:param name="title-heading-level">section</xsl:param>
 
   <!--
       Boolean check lists.
@@ -303,7 +303,7 @@
   <!-- BLOCK ELEMENTS -->
   <xsl:template match="head">
     <xsl:if test="not(following-sibling::p)">
-      \extrasubsection*{<xsl:apply-templates/>}
+      \subsection*{<xsl:apply-templates/>}
     </xsl:if>
   </xsl:template>
 
@@ -326,7 +326,7 @@
                   ((parent::div[1]/translate(@ana, '#', '') = $structure-types/*) and (position() = 1))">
       <xsl:text>[</xsl:text>
       <xsl:if test="preceding-sibling::head">
-        <xsl:text>\extrasubsection{</xsl:text>
+        <xsl:text>\subsection{</xsl:text>
         <xsl:apply-templates select="preceding-sibling::head/node()"/>
         <xsl:text>}</xsl:text>
       </xsl:if>
