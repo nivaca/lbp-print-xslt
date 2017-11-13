@@ -342,6 +342,7 @@
         <xsl:with-param name="context" select="$starts_on"/>
         <xsl:with-param name="inParallelText" select="$inParallelText"/>
       </xsl:call-template>
+      <xsl:text>%&#xa;</xsl:text>
     </xsl:if>
     <xsl:if test="my:istrue($create-structure-numbers)">
       <xsl:call-template name="create-structure-number"/>
@@ -449,10 +450,6 @@
           </xsl:call-template>
         </xsl:if>
       </xsl:when>
-      <!-- No structure number should be printed, so just make a linebreak -->
-      <xsl:otherwise>
-        <xsl:text>&#xa;</xsl:text>
-      </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
