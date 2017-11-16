@@ -314,6 +314,10 @@
     <xsl:variable name="p_position">
       <xsl:number from="/TEI/text/body/div" level="any"/>
     </xsl:variable>
+    <xsl:variable name="position_in_div">
+      <xsl:number count="p" />
+    </xsl:variable>
+    <xsl:variable name="p_id" select="@xml:id"/>
     <xsl:if test="$pn='1'">
       <xsl:text>&#xa;&#xa;\begin{</xsl:text>
       <xsl:value-of select="$text_language"/>
@@ -345,12 +349,34 @@
       <xsl:text>%&#xa;</xsl:text>
     </xsl:if>
     <xsl:if test="my:istrue($create-structure-numbers)">
-      <xsl:call-template name="create-structure-number"/>
+      <xsl:call-template name="create_structure_number"/>
     </xsl:if>
     <xsl:apply-templates/>
     <xsl:call-template name="createLabelFromId">
       <xsl:with-param name="labelType">end</xsl:with-param>
     </xsl:call-template>
+    <!--
+    <xsl:if test="(count(parent::div//p) = $position_in_div)">
+      <xsl:for-each select="ancestor::div">
+        ancestor_count: <xsl:value-of select="count(.//p)"/> (<xsl:value-of select="./@xml:id"/>)
+        position_in_ancestor: <xsl:number from="//p[@xml:id=$p_id]" count="p"/>
+
+
+        <xsl:call-template name="createLabelFromId">
+          <xsl:with-param name="labelId" select="parent::div/@xml:id"/>
+          <xsl:with-param name="labelType">end</xsl:with-param>
+        </xsl:call-template>
+
+      </xsl:for-each>
+    </xsl:if>
+    -->
+    <!--
+    in_div_count: <xsl:value-of select="count(parent::div//p)"/>
+    pn: <xsl:value-of select="$pn"/>
+    p_count: <xsl:value-of select="$p_count"/>
+    position_in_div: <xsl:number count="p" />
+    p_position: <xsl:value-of select="$p_position"/>
+     -->
     <xsl:text>&#xa;\pend&#xa;</xsl:text>
     <xsl:if test="$p_position = $p_count">
       <xsl:text>&#xa;&#xa;\endnumbering</xsl:text>
@@ -362,22 +388,25 @@
 
   <xsl:template name="createLabelFromId">
     <xsl:param name="labelType" />
+    <xsl:param name="labelId">
+      <xsl:value-of select="@xml:id"/>
+    </xsl:param>
     <xsl:if test="@xml:id">
       <xsl:text>%&#xa;</xsl:text>
       <xsl:choose>
         <xsl:when test="$labelType='start'">
           <xsl:text>\edlabelS{</xsl:text>
-          <xsl:value-of select="@xml:id"/>
+          <xsl:value-of select="$labelId"/>
           <xsl:text>}%</xsl:text>
         </xsl:when>
         <xsl:when test="$labelType='end'">
           <xsl:text>\edlabelE{</xsl:text>
-          <xsl:value-of select="@xml:id"/>
+          <xsl:value-of select="$labelId"/>
           <xsl:text>}</xsl:text>
         </xsl:when>
         <xsl:otherwise>
           <xsl:text>\edlabel{</xsl:text>
-          <xsl:value-of select="@xml:id"/>
+          <xsl:value-of select="$labelId"/>
           <xsl:text>}</xsl:text>
         </xsl:otherwise>
       </xsl:choose>
@@ -418,8 +447,9 @@
     <!--
       Create number if
        * first p in div
-       * the parent div is a structural div element and there are no sibling divs
-       * there are sibling divs but the parent is not a structural div element.
+       * the parent div is a structural div element and there are no sibling divs (singular p's)
+       * there are sibling divs (branch p with subordinate divs)
+       * the parent div has the type "number-all"
     -->
     <xsl:if test="
       $p_in_div = 1
@@ -427,7 +457,7 @@
       or ($anchor/following-sibling::div or $anchor/preceding-sibling::div)
       or parent::div[@type='number-all']">
 
-      <!-- First insert the number text -->
+      <!-- First insert the number text and possible prefix -->
       <xsl:text>\no{</xsl:text>
       <xsl:value-of select="$prefix"/>
 
@@ -441,7 +471,6 @@
         </xsl:when>
         <xsl:otherwise>
           <xsl:for-each select="$anchor/ancestor::div[my:struct-elem(@ana)]">
-            <xsl:value-of select="@xml:id"/>
             <xsl:number count="div|p[not(@ana = '#structure-head') and ancestor::div[my:struct-elem(@ana)] ]"/>
           </xsl:for-each>
         </xsl:otherwise>
