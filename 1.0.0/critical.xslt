@@ -167,7 +167,7 @@
   <!-- PREAMBLE -->
   <xsl:template match="/">
     <xsl:if test="my:istrue($standalone-document)">
-      %this tex file was auto produced from TEI by lbp_print on <xsl:value-of select="current-dateTime()"/> 
+      %this tex file was auto produced from TEI by lbp_print on <xsl:value-of select="current-dateTime()"/>
       \documentclass[a4paper, <xsl:value-of select="$font-size"/>pt]{book}
 
       % imakeidx must be loaded beore eledmac
@@ -404,53 +404,106 @@
 
   <xsl:function name="my:struct-elem">
     <xsl:param name="ana-value"/>
-    <xsl:if test="translate($ana-value, '#', '') = $structure-types/*">
+    <xsl:if test="translate($ana-value[last()], '#', '') = $structure-types/*">
       <xsl:value-of select="true()"/>
     </xsl:if>
   </xsl:function>
 
+  <xsl:template name="create_structure_sub">
+    <xsl:param name="anchor" />
+    <xsl:param name="prefix"/>
+    <xsl:param name="base_number"/>
+    <xsl:variable name="p_in_div"><xsl:number count="p"/></xsl:variable>
 
-  <!-- TODO: FIND a way of making references -->
-  <!-- TODO: Make the number generation more generic (recursive) -->
-  <xsl:template name="create-structure-number">
-    <xsl:choose>
-      <!-- p as structure element -->
-      <xsl:when test="my:struct-elem(@ana)">
-        <xsl:call-template name="print-structure-number">
-          <xsl:with-param name="section-number">
-            <xsl:number select="." count="div[my:struct-elem(@ana)]|p[my:struct-elem(@ana)]"/>
-          </xsl:with-param>
-        </xsl:call-template>
-      </xsl:when>
-      <!-- p as child of structure div -->
-      <xsl:when test="ancestor::div[my:struct-elem(@ana)] and
-                      parent::div[my:struct-elem(@ana)]">
-        <xsl:call-template name="print-structure-number">
-          <xsl:with-param name="section-number">
-            <xsl:number select="ancestor::div[my:struct-elem(@ana)]"
-                        count="div[my:struct-elem(@ana)]|p[my:struct-elem(@ana)]"/>
-            <xsl:if test="not(@ana = '#structure-head')">
-              <xsl:text>.</xsl:text>
-              <xsl:number select="." count="p[not(@ana = '#structure-head')]|div"/>
-            </xsl:if>
-          </xsl:with-param>
-        </xsl:call-template>
-      </xsl:when>
-      <!-- p inside div inside structure div -->
-      <xsl:when test="ancestor::div[my:struct-elem(@ana)] and
-                      parent::div[not(my:struct-elem(@ana))]">
-        <xsl:if test="position() = 1">
-          <xsl:call-template name="print-structure-number">
-            <xsl:with-param name="section-number">
-              <xsl:number select="ancestor::div[my:struct-elem(@ana)]"
-                          count="div[my:struct-elem(@ana)]|p[my:struct-elem(@ana)]"/>
-              <xsl:text>.</xsl:text>
-              <xsl:number select="parent::div" count="p[not(@ana = '#structure-head')]|div"/>
+    <!--
+      Create number if
+       * first p in div
+       * the parent div is a structural div element and there are no sibling divs
+       * there are sibling divs but the parent is not a structural div element.
+    -->
+    <xsl:if test="
+      $p_in_div = 1
+      or ($anchor/parent::div[my:struct-elem(@ana)] and not($anchor/following-sibling::div | $anchor/preceding-sibling::div))
+      or ($anchor/following-sibling::div or $anchor/preceding-sibling::div)
+      or parent::div[@type='number-all']">
+
+      <!-- First insert the number text -->
+      <xsl:text>\no{</xsl:text>
+      <xsl:value-of select="$prefix"/>
+
+      <!-- Then insert the base level number.
+        Either take it from the passed parameter (would be in non-referenced ad-rationes)
+        In a way the loop is superflous, but we need it to get the proper context
+        of the number when the $anchor is not just the current p. -->
+      <xsl:choose>
+        <xsl:when test="$base_number != ''">
+          <xsl:value-of select="$base_number"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:for-each select="$anchor/ancestor::div[my:struct-elem(@ana)]">
+            <xsl:value-of select="@xml:id"/>
+            <xsl:number count="div|p[not(@ana = '#structure-head') and ancestor::div[my:struct-elem(@ana)] ]"/>
+          </xsl:for-each>
+        </xsl:otherwise>
+      </xsl:choose>
+
+      <!-- Now, for each div or p below the top level structure element div, print its number -->
+      <xsl:for-each select="$anchor/ancestor::div[my:struct-elem(ancestor::div/@ana)]|$anchor[my:struct-elem(ancestor::div/@ana)]">
+        <!-- Exclude p's marked as structure-head -->
+        <xsl:if test="not(@ana = '#structure-head')">
+          <!-- Honestly, this it is not clear why I need this test right now... :/ -->
+          <xsl:if test="(preceding-sibling::div | following-sibling::div) or (position() = 1) or (parent::div[@type='number-all'])">
+            <xsl:text>.</xsl:text>
+            <xsl:number count="div|p[not(@ana = '#structure-head')]"/>
+          </xsl:if>
+        </xsl:if>
+      </xsl:for-each>
+
+      <!-- Close up -->
+      <xsl:text>}</xsl:text>
+    </xsl:if>
+  </xsl:template>
+
+  <xsl:template name="create_structure_number">
+    <xsl:variable name="in_answers">
+      <xsl:choose>
+        <xsl:when test="ancestor::div[@ana='#ad-rationes']">1</xsl:when>
+        <xsl:otherwise>0</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:variable name="prefix_value">
+      <xsl:choose>
+        <xsl:when test="$in_answers = 1">Ad </xsl:when>
+        <xsl:otherwise/>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:if test="ancestor::div[my:struct-elem(@ana)]">
+      <xsl:choose>
+        <xsl:when test="@corresp">
+          <xsl:variable name="corresp_id" select="translate(./@corresp, '#', '')"/>
+          <xsl:call-template name="create_structure_sub">
+            <xsl:with-param name="anchor" select="//*[@xml:id=$corresp_id]"/>
+            <xsl:with-param name="prefix" select="$prefix_value"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:when test="parent::div[@corresp] and position() = 1">
+          <xsl:variable name="corresp_div_id" select="translate(parent::div/@corresp, '#', '')"/>
+          <xsl:call-template name="create_structure_sub">
+            <xsl:with-param name="anchor" select="//*[@xml:id=$corresp_div_id]"/>
+            <xsl:with-param name="prefix" select="$prefix_value"/>
+          </xsl:call-template>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:call-template name="create_structure_sub">
+            <xsl:with-param name="anchor" select="."/>
+            <xsl:with-param name="prefix" select="$prefix_value"/>
+            <xsl:with-param name="base_number">
+              <xsl:if test="$in_answers = 1">1</xsl:if>
             </xsl:with-param>
           </xsl:call-template>
-        </xsl:if>
-      </xsl:when>
-    </xsl:choose>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:if>
   </xsl:template>
 
 
