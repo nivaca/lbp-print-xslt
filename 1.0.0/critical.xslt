@@ -409,14 +409,15 @@
       <xsl:value-of select="@xml:id"/>
     </xsl:param>
     <xsl:if test="@xml:id">
-      <xsl:text>%&#xa;</xsl:text>
       <xsl:choose>
         <xsl:when test="$labelType='start'">
+          <xsl:text>&#xa;</xsl:text>
           <xsl:text>\edlabelS{</xsl:text>
           <xsl:value-of select="$labelId"/>
           <xsl:text>}%</xsl:text>
         </xsl:when>
         <xsl:when test="$labelType='end'">
+          <xsl:text>%&#xa;</xsl:text>
           <xsl:text>\edlabelE{</xsl:text>
           <xsl:value-of select="$labelId"/>
           <xsl:text>}</xsl:text>
