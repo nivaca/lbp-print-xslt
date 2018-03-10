@@ -1249,25 +1249,46 @@
     <xsl:choose>
       <xsl:when test=".//@extent &lt; 2">
         <xsl:choose>
-          <xsl:when test=".//@unit = 'letters'"> litt.</xsl:when>
-          <xsl:when test=".//@unit = 'words'"> verb.</xsl:when>
+          <xsl:when test=".//@unit = 'characters'"> litt.</xsl:when>
+          <xsl:when test=".//@unit = 'words'"> vox</xsl:when>
         </xsl:choose>
       </xsl:when>
       <xsl:otherwise>
         <xsl:choose>
-          <xsl:when test=".//@unit = 'letters'"> litt.</xsl:when>
-          <xsl:when test=".//@unit = 'words'"> verb.</xsl:when>
+          <xsl:when test=".//@unit = 'characters'"> litt.</xsl:when>
+          <xsl:when test=".//@unit = 'words'"> voc.</xsl:when>
         </xsl:choose>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+  
+  <xsl:variable name="locations-above">
+    <n>above</n>
+    <n>above-line</n>
+  </xsl:variable>
+  
+  <xsl:variable name="locations-margin">
+    <n>margin</n>
+    <n>right-margin</n>
+    <n>left-margin</n>
+    <n>top-margin</n>
+    <n>bottom-margin</n>
+    <n>inner-margin</n>
+    <n>outer-margin</n>
+    <n>margin-left</n>
+    <n>margin-right</n>
+    <n>margin-top</n>
+    <n>margin-bottom</n>
+    <n>margin-inner</n>
+    <n>margin-outer</n>
+  </xsl:variable>
 
   <xsl:template name="getLocation">
     <xsl:choose>
-      <xsl:when test="add/@place='above-line'">
+      <xsl:when test="add/@place = $locations-above/*">
         <xsl:text> \emph{sup. lin.}</xsl:text>
       </xsl:when>
-      <xsl:when test="contains(add/@place, 'margin')">
+      <xsl:when test="add/@place = $locations-margin/*">
         <xsl:text> \emph{in marg.}</xsl:text>
       </xsl:when>
     </xsl:choose>
