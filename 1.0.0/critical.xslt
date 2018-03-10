@@ -758,36 +758,19 @@
             This is the trick part. If we are actually in a <lem>-element instead of
             a <rdg>-element, it entails some changes in the handling of the
             apparatus note.
-            We know that we are in a <lem>-element if it is given a reading type.
             TODO: This should check that it is one of the used reading types.
             TODO: Should all reading types be possible in the lemma? Any? It is
             implied by the possibility of having @wit in lemma.
         -->
-        <xsl:if test="lem/@wit or lem/@source">
-          <!-- This loop is stupid, but I need to have the lem-element as the root
-               node when handling the variants. -->
-          <xsl:for-each select="./lem">
-            <xsl:call-template name="varianttype">
-              <xsl:with-param name="lemma_text" select="$lemma_text" />
-              <xsl:with-param name="fromLemma">1</xsl:with-param>
-            </xsl:call-template>
-          </xsl:for-each>
-        </xsl:if>
-        <xsl:for-each select="rdg">
-          <!-- This test is not good. Intention: If rdg = lemma, or it is
-               explicitly said to be identical with the @corresp='#lemma', AND the
-               apparatus should be negative, it should not print the entry. It
-               gives problems with additions, where the test on identity between
-               lemma and reading returns true, but I don't what that (the
-               reading contains an <add>. -->
-          <xsl:if test="not($lemma_text = my:format-lemma(.) or @copyOf = 'preceding::lem')
+        <xsl:for-each select="lem|rdg">
+          <xsl:if test="not($lemma_text = my:format-lemma(.))
                         or unclear
                         or @type = 'correction-addition'
                         or my:istrue($positive-apparatus)">
             <xsl:call-template name="varianttype">
               <xsl:with-param name="preceding_word" select="$preceding_word"/>
               <xsl:with-param name="lemma_text" select="$lemma_text" />
-              <xsl:with-param name="fromLemma">0</xsl:with-param>
+              <xsl:with-param name="preceding_word" select="$preceding_word"/>
             </xsl:call-template>
           </xsl:if>
         </xsl:for-each>
