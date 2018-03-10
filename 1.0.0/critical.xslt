@@ -319,6 +319,9 @@
     <xsl:variable name="position_in_div">
       <xsl:number count="p" />
     </xsl:variable>
+    <xsl:variable name="parent_div_id">
+      <xsl:value-of select="parent::div[1]/@xml:id"/>
+    </xsl:variable>
     <xsl:variable name="p_id" select="@xml:id"/>
     <xsl:if test="$pn='1'">
       <xsl:text>&#xa;&#xa;\begin{</xsl:text>
