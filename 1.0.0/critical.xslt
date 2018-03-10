@@ -338,6 +338,13 @@
       </xsl:if>
       <xsl:text>]</xsl:text>
     </xsl:if>
+    <!-- If first p in div, create div id -->
+    <xsl:if test="$position_in_div = 1 and $parent_div_id != ''">
+      <xsl:call-template name="createLabelFromId">
+        <xsl:with-param name="labelType">start</xsl:with-param>
+        <xsl:with-param name="labelId" select="$parent_div_id"/>
+      </xsl:call-template>
+    </xsl:if>
     <xsl:call-template name="createLabelFromId">
       <xsl:with-param name="labelType">start</xsl:with-param>
     </xsl:call-template>
@@ -357,6 +364,14 @@
     <xsl:call-template name="createLabelFromId">
       <xsl:with-param name="labelType">end</xsl:with-param>
     </xsl:call-template>
+    <!-- If last p in div, create div id -->
+    <xsl:if test="$position_in_div = count(parent::div/p) and $parent_div_id != ''">
+      <xsl:call-template name="createLabelFromId">
+        <xsl:with-param name="labelType">end</xsl:with-param>
+        <xsl:with-param name="labelId" select="$parent_div_id"/>
+      </xsl:call-template>
+    </xsl:if>
+
     <!--
     <xsl:if test="(count(parent::div//p) = $position_in_div)">
       <xsl:for-each select="ancestor::div">
