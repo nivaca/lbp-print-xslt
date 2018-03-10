@@ -304,7 +304,7 @@
 
   <!-- BLOCK ELEMENTS -->
   <xsl:template match="head">
-    <xsl:if test="not(following-sibling::p)">
+    <xsl:if test="not(following-sibling::*[1][self::p])">
       \subsection*{<xsl:apply-templates/>}
     </xsl:if>
   </xsl:template>
