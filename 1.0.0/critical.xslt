@@ -265,11 +265,13 @@
       \newcommand{\supplied}[1]{⟨#1⟩} <!-- Previously I used ⟨#1⟩ -->
       \newcommand{\suppliedInVacuo}[1]{$\ulcorner$#1$\urcorner$} <!-- Text added where witnes(es) preserve a space -->
       \newcommand{\secluded}[1]{{[}#1{]}}
-      \newcommand{\metatext}[1]{&lt;#1&gt;}
+      \newcommand{\metatext}[1]{\{#1\}}
       \newcommand{\hand}[1]{\textsuperscript{#1}}
-      \newcommand{\del}[1]{[#1 del. ms]}
+      \newcommand{\del}[1]{\textlbrackdbl{}#1\textrbrackdbl{}}
       \newcommand{\no}[1]{\emph{#1}\quad}
+      \newcommand{\added}[1]{$\backslash{}$#1$/$}
       \newcommand{\corruption}[1]{\textdagger#1\textdagger}
+      \newcommand{\fenestra}[1]{$\ulcorner$#1$\urcorner$}
       \newcommand{\lacuna}{\supplied{\textasteriskcentered\textasteriskcentered\textasteriskcentered}}
 
       <xsl:if test="/TEI/teiHeader/revisionDesc/@status = 'draft'">
