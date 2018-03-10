@@ -768,7 +768,7 @@
                         or @type = 'correction-addition'
                         or my:istrue($positive-apparatus)">
             <xsl:call-template name="varianttype">
-              <xsl:with-param name="preceding_word" select="$preceding_word"/>
+              <xsl:with-param name="context" select="."/>
               <xsl:with-param name="lemma_text" select="$lemma_text" />
               <xsl:with-param name="preceding_word" select="$preceding_word"/>
             </xsl:call-template>
@@ -851,16 +851,16 @@
 
   <xsl:template name="varianttype">
     <xsl:param name="lemma_text" />
-    <xsl:param name="fromLemma" />
     <xsl:param name="preceding_word" />
+    <xsl:param name="context"/>
 
     <xsl:choose>
 
       <!-- VARIATION READINGS -->
       <!-- variation-substance -->
       <xsl:when test="@type = 'variation-substance' or not(@type)">
-        <xsl:if test="not($lemma_text = my:format-lemma(.))">
-          <xsl:apply-templates select="."/>
+        <xsl:if test="not($lemma_text = my:format-lemma($context))">
+          <xsl:apply-templates select="$context"/>
         </xsl:if>
         <xsl:text> </xsl:text>
         <xsl:call-template name="get_witness_siglum"/>
@@ -869,7 +869,7 @@
       <!-- variation-orthography -->
       <xsl:when test="@type = 'variation-orthography'">
         <xsl:if test="my:isfalse($ignore-spelling-variants)">
-          <xsl:apply-templates select="."/>
+          <xsl:apply-templates select="$context"/>
           <xsl:text> </xsl:text>
           <xsl:call-template name="get_witness_siglum"/>
         </xsl:if>
@@ -878,10 +878,10 @@
       <!-- variation-inversion -->
       <xsl:when test="@type = 'variation-inversion'">
         <xsl:choose>
-          <xsl:when test="./seg">
-            <xsl:apply-templates select="./seg[1]"/>
+          <xsl:when test="$context/seg">
+            <xsl:apply-templates select="$context/seg[1]"/>
             <xsl:text> \emph{ante} </xsl:text>
-            <xsl:apply-templates select="./seg[2]"/>
+            <xsl:apply-templates select="$context/seg[2]"/>
             <xsl:text> \emph{scr.} </xsl:text>
           </xsl:when>
           <xsl:otherwise>
@@ -901,13 +901,13 @@
                   different people), use the reading, which will be identical to
                   the preceding word, as it is an iteration
               -->
-              <xsl:value-of select="."/>
+              <xsl:value-of select="$context"/>
             </xsl:if>
             <xsl:text> \emph{iter.} </xsl:text>
           </xsl:when>
           <xsl:otherwise>
             <xsl:call-template name="process_empty_lemma_reading">
-              <xsl:with-param name="reading_content" select="."/>
+              <xsl:with-param name="reading_content" select="$context"/>
               <xsl:with-param name="preceding_word" select="$preceding_word"/>
             </xsl:call-template>
           </xsl:otherwise>
@@ -939,13 +939,13 @@
                   <xsl:text> \emph{et} </xsl:text>
                 </xsl:when>
                 <xsl:otherwise>
-                  <xsl:apply-templates select="."/>
+                  <xsl:apply-templates select="$context"/>
                   <xsl:text>, </xsl:text>
                 </xsl:otherwise>
               </xsl:choose>
             </xsl:when>
             <xsl:otherwise>
-              <xsl:apply-templates select="."/>
+              <xsl:apply-templates select="$context"/>
             </xsl:otherwise>
           </xsl:choose>
         </xsl:for-each>
@@ -958,9 +958,9 @@
       <xsl:when test="@type = 'correction-addition'">
         <xsl:choose>
           <!-- addition made in <lem> element -->
-          <xsl:when test="$fromLemma = 1">
-            <xsl:if test="not($lemma_text = my:format-lemma(.))">
-              <xsl:apply-templates select="."/>
+          <xsl:when test="name($context) = lem">
+            <xsl:if test="not($lemma_text = my:format-lemma($context))">
+              <xsl:apply-templates select="$context"/>
             </xsl:if>
           </xsl:when>
           <!-- addition not in lemma element -->
@@ -987,7 +987,7 @@
 
       <!-- manual -->
       <xsl:when test="@type = 'manual'">
-        <xsl:apply-templates select="."/>
+        <xsl:apply-templates select="$context"/>
         <xsl:text> </xsl:text>
         <xsl:call-template name="get_witness_siglum"/>
       </xsl:when>
@@ -1104,7 +1104,7 @@
       <xsl:when test="@type = 'conjecture-supplied'">
         <xsl:choose>
           <!-- If we come from lemma element, don't print the content of it -->
-          <xsl:when test="$fromLemma = 1"/>
+          <xsl:when test="name($context) = lem"/>
           <!-- Otherwise, just print -->
           <xsl:otherwise>
             <xsl:apply-templates select="supplied/text()"/>
@@ -1128,7 +1128,7 @@
             </xsl:call-template>
           </xsl:when>
           <!-- If we come from lemma element, don't print the content of it -->
-          <xsl:when test="$fromLemma = 1"/>
+          <xsl:when test="name($context) = lem"/>
           <xsl:otherwise>
             <xsl:apply-templates select="supplied"/>
           </xsl:otherwise>
@@ -1144,7 +1144,7 @@
       <xsl:when test="@type = 'conjecture-corrected'">
         <xsl:choose>
           <!-- If we come from lemma element, don't repeat the content -->
-          <xsl:when test="$fromLemma = 1"/>
+          <xsl:when test="name($context) = lem"/>
           <xsl:otherwise>
             <xsl:apply-templates select="corr"/>
             <xsl:text> \emph{conj.} </xsl:text>
@@ -1158,7 +1158,7 @@
 
       <!-- fallback: If no type matches, print the content and the siglum. -->
       <xsl:otherwise>
-        <xsl:apply-templates select="."/><xsl:text> </xsl:text>
+        <xsl:apply-templates select="$context"/><xsl:text> </xsl:text>
         <xsl:call-template name="get_witness_siglum"/>
       </xsl:otherwise>
     </xsl:choose>
