@@ -332,8 +332,8 @@
                   ((parent::div[1]/translate(@ana, '#', '') = $structure-types/*) and (position() = 1))">
       <xsl:text>[</xsl:text>
       <xsl:if test="preceding-sibling::head">
-        <xsl:text>\subsection{</xsl:text>
-        <xsl:apply-templates select="preceding-sibling::head/node()"/>
+        <xsl:text>\subsection*{</xsl:text>
+        <xsl:apply-templates select="preceding-sibling::head[1]/node()"/>
         <xsl:text>}</xsl:text>
       </xsl:if>
       <xsl:text>]</xsl:text>
