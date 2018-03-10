@@ -586,11 +586,24 @@
   <xsl:template match="unclear">\emph{<xsl:apply-templates/> [?]}</xsl:template>
   <xsl:template match="desc">\emph{<xsl:apply-templates/>}</xsl:template>
   <xsl:template match="abbr">\textsuperscript{<xsl:apply-templates/>}</xsl:template>
-  <xsl:template match="app//mentioned">\emph{<xsl:apply-templates/>}</xsl:template>
   <xsl:template match="mentioned">`<xsl:apply-templates/>'</xsl:template>
+  <xsl:template match="add">\added{<xsl:apply-templates/>}</xsl:template>
+  <xsl:template match="del">\del{<xsl:apply-templates/>}</xsl:template>
+  <xsl:template match="subst/add"><xsl:apply-templates/></xsl:template>
+  <xsl:template match="subst/del"><xsl:apply-templates/></xsl:template>
+  <xsl:template match="lem/add"><xsl:apply-templates/></xsl:template>
+  <xsl:template match="lem/del"><xsl:apply-templates/></xsl:template>
+
+
   <xsl:template match="sic[@ana='#crux']">\corruption{<xsl:apply-templates/>}</xsl:template>
   <xsl:template match="note">\footnote{<xsl:apply-templates/>}</xsl:template>
   <xsl:template match="gap[@type='lacuna']">\lacuna{}</xsl:template>
+  <xsl:template match="gap[@type='fenestra']">
+    <xsl:text>\fenestra{\emph{</xsl:text>
+    <xsl:call-template name="getExtent" />
+    <xsl:text>}}</xsl:text>
+  </xsl:template>
+  <xsl:template match="c[@type='variable']">\emph{<xsl:apply-templates/>}</xsl:template>
 
   <xsl:template match="rdg/cb | rdg/pb">
     <xsl:text>|</xsl:text>
