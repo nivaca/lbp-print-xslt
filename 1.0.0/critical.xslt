@@ -291,7 +291,7 @@
     </xsl:if>
 
 
-    \<xsl:value-of select="$title-heading-level"/>{<xsl:value-of select="$author"/>: <xsl:value-of select="$title"/>}
+    <!-- \<xsl:value-of select="$title-heading-level"/>{<xsl:value-of select="$title"/>} -->
 
     <xsl:apply-templates select="//body"/>
 
