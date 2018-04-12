@@ -594,8 +594,11 @@
   <xsl:template match="del">\del{<xsl:apply-templates/>}</xsl:template>
   <xsl:template match="subst/add"><xsl:apply-templates/></xsl:template>
   <xsl:template match="subst/del"><xsl:apply-templates/></xsl:template>
+  <xsl:template match="app/add"><xsl:apply-templates/></xsl:template>
+  <xsl:template match="app/del"><xsl:apply-templates/></xsl:template>
   <xsl:template match="lem/add"><xsl:apply-templates/></xsl:template>
   <xsl:template match="lem/del"><xsl:apply-templates/></xsl:template>
+  <xsl:template match="app//unclear"><xsl:apply-templates/></xsl:template>
 
 
   <xsl:template match="sic[@ana='#crux']">\corruption{<xsl:apply-templates/>}</xsl:template>
@@ -606,6 +609,7 @@
     <xsl:call-template name="getExtent" />
     <xsl:text>}}</xsl:text>
   </xsl:template>
+  <xsl:template match="rdg/gap">\emph{illegibilis}</xsl:template>
   <xsl:template match="c[@type='variable']">\emph{<xsl:apply-templates/>}</xsl:template>
 
   <xsl:template match="rdg/cb | rdg/pb">
