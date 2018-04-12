@@ -1223,6 +1223,15 @@
       <xsl:text> \emph{lectio incerta} </xsl:text>
     </xsl:if>
     <xsl:value-of select="translate(@wit, '#', '')"/>
+    <!-- Any hand attributes? -->
+    <xsl:if test=".//@hand">
+      <xsl:text>\hand{</xsl:text>
+      <xsl:for-each select=".//@hand">
+        <xsl:value-of select="translate(., '#', '')"/>
+        <xsl:if test="not(position() = last())">, </xsl:if>
+      </xsl:for-each>
+      <xsl:text>}</xsl:text>
+    </xsl:if>
     <xsl:text> </xsl:text>
     <!-- Then fill in other sources -->
     <xsl:variable name="source-id" select="translate(@source, '#', '')"/>
@@ -1234,14 +1243,6 @@
         <xsl:value-of select="$source-id"/>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:if test=".//@hand">
-      <xsl:text>\hand{</xsl:text>
-      <xsl:for-each select=".//@hand">
-        <xsl:value-of select="translate(., '#', '')"/>
-        <xsl:if test="not(position() = last())">, </xsl:if>
-      </xsl:for-each>
-      <xsl:text>}</xsl:text>
-    </xsl:if>
     <xsl:if test="my:istrue($apparatus-numbering)">
       <xsl:text> n</xsl:text><xsl:value-of select="$appnumber"></xsl:value-of>
     </xsl:if>
