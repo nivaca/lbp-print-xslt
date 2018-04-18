@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet
-    xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0" xpath-default-namespace="http://www.tei-c.org/ns/1.0"
-    xmlns:tei="http://www.tei-c.org/ns/1.0"
-    xmlns:my="local functions">
+    xmlns:tei="http://www.tei-c.org/ns/1.0" xpath-default-namespace="http://www.tei-c.org/ns/1.0"
+    xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
+    xmlns:my="local functions"
+    xmlns:_="localisation">
 
   <!-- Variables from XML teiHeader -->
   <xsl:param name="apploc"><xsl:value-of select="/TEI/teiHeader/encodingDesc/variantEncoding/@location"/></xsl:param>
@@ -28,6 +29,7 @@
   <!-- Command line parameters -->
   <xsl:param name="name-list-file">../../lists/prosopography.xml</xsl:param>
   <xsl:param name="work-list-file">../../lists/workscited.xml</xsl:param>
+  <xsl:param name="localisation-file">localisation.xml</xsl:param>
   <xsl:param name="app-entry-separator">;</xsl:param>
   <xsl:param name="font-size">12</xsl:param>
   <xsl:param name="ignore-spelling-variants">no</xsl:param>
@@ -41,6 +43,10 @@
   <xsl:param name="standalone-document">yes</xsl:param>
   <xsl:param name="create-structure-numbers">yes</xsl:param>
   <xsl:param name="title-heading-level">section</xsl:param>
+
+  <xsl:variable name="localisations">
+    <xsl:copy-of select="document($localisation-file)"/>
+  </xsl:variable>
 
   <!--
       Boolean check lists.
@@ -1253,28 +1259,53 @@
   </xsl:template>
 
   <xsl:template name="getExtent">
-    <xsl:value-of select=".//@extent" />
+    <xsl:param name="language">la</xsl:param>
+    <xsl:variable name="unit" select=".//@unit"/>
+    <xsl:variable name="extent" select=".//@extent"/>
+    <xsl:variable name="number">
+      <xsl:choose>
+        <xsl:when test="$extent &gt; 1">plural</xsl:when>
+        <xsl:otherwise>singular</xsl:otherwise>
+      </xsl:choose>
+    </xsl:variable>
+    <xsl:value-of select="$extent"/>
+    <xsl:text> </xsl:text>
+    <xsl:variable name="extent-localisation">
+      <xsl:value-of select="$localisations//_:map[@xml:lang=$language]/_:map[@name='extents']/_:gloss[@key=$unit and @number=$number]"/>
+    </xsl:variable>
     <xsl:choose>
-      <xsl:when test=".//@extent &lt; 2">
-        <xsl:choose>
-          <xsl:when test=".//@unit = 'characters'"> litt.</xsl:when>
-          <xsl:when test=".//@unit = 'words'"> vox</xsl:when>
-        </xsl:choose>
+      <xsl:when test="not($extent-localisation = '')">
+        <xsl:value-of select="$extent-localisation"/>
       </xsl:when>
       <xsl:otherwise>
-        <xsl:choose>
-          <xsl:when test=".//@unit = 'characters'"> litt.</xsl:when>
-          <xsl:when test=".//@unit = 'words'"> voc.</xsl:when>
-        </xsl:choose>
+        <xsl:message>No localisation in localisation file (<xsl:value-of select="$localisation-file"/>) for following element: <xsl:copy-of select="." /></xsl:message>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
-  
+
+  <xsl:template match="*" mode="serialize" name="serialize">
+    <xsl:text>&lt;</xsl:text>
+    <xsl:value-of select="name()"/>
+    <xsl:apply-templates select="@*" mode="serialize" />
+    <xsl:choose>
+      <xsl:when test="node()">
+        <xsl:text>&gt;</xsl:text>
+        <xsl:apply-templates mode="serialize" />
+        <xsl:text>&lt;/</xsl:text>
+        <xsl:value-of select="name()"/>
+        <xsl:text>&gt;</xsl:text>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:text> /&gt;</xsl:text>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
   <xsl:variable name="locations-above">
     <n>above</n>
     <n>above-line</n>
   </xsl:variable>
-  
+
   <xsl:variable name="locations-margin">
     <n>margin</n>
     <n>right-margin</n>
