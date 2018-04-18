@@ -615,6 +615,15 @@
     <xsl:call-template name="getExtent" />
     <xsl:text>}}</xsl:text>
   </xsl:template>
+  <xsl:template match="gap[@reason='editorial']">
+    <xsl:text>[skipped </xsl:text>
+    <xsl:call-template name="getExtent">
+      <xsl:with-param name="language">en</xsl:with-param>
+    </xsl:call-template>
+    <xsl:text>.</xsl:text>
+    <xsl:apply-templates />
+    <xsl:text>]</xsl:text>
+  </xsl:template>
   <xsl:template match="rdg/gap">\emph{illegibilis}</xsl:template>
   <xsl:template match="c[@type='variable']">\emph{<xsl:apply-templates/>}</xsl:template>
 
