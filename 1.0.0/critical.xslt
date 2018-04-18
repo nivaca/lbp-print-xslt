@@ -266,7 +266,7 @@
 
       % custom macros
       \newcommand{\name}[1]{#1}
-      \newcommand{\lemmaQuote}[1]{\textsc{#1}}
+      \newcommand{\lemmaQuote}[1]{\emph{#1}}
       \newcommand{\worktitle}[1]{\textit{#1}}
       \newcommand{\supplied}[1]{⟨#1⟩} <!-- Previously I used ⟨#1⟩ -->
       \newcommand{\suppliedInVacuo}[1]{$\ulcorner$#1$\urcorner$} <!-- Text added where witnes(es) preserve a space -->
