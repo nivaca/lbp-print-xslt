@@ -1234,8 +1234,8 @@
       <xsl:text>} </xsl:text>
     </xsl:if>
     <!-- Then note if the reading is uncertain -->
-    <xsl:if test="unclear">
-      <xsl:text> \emph{lectio incerta} </xsl:text>
+    <xsl:if test=".//unclear">
+      <xsl:text> \emph{ut videtur} </xsl:text>
     </xsl:if>
     <xsl:value-of select="translate(@wit, '#', '')"/>
     <!-- Any hand attributes? -->
