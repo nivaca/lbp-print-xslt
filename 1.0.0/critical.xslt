@@ -598,12 +598,8 @@
   <xsl:template match="mentioned">`<xsl:apply-templates/>'</xsl:template>
   <xsl:template match="add">\added{<xsl:apply-templates/>}</xsl:template>
   <xsl:template match="del">\del{<xsl:apply-templates/>}</xsl:template>
-  <xsl:template match="subst/add"><xsl:apply-templates/></xsl:template>
-  <xsl:template match="subst/del"><xsl:apply-templates/></xsl:template>
-  <xsl:template match="app/add"><xsl:apply-templates/></xsl:template>
-  <xsl:template match="app/del"><xsl:apply-templates/></xsl:template>
-  <xsl:template match="lem/add"><xsl:apply-templates/></xsl:template>
-  <xsl:template match="lem/del"><xsl:apply-templates/></xsl:template>
+  <xsl:template match="app//add"><xsl:apply-templates/></xsl:template>
+  <xsl:template match="app//del"><xsl:apply-templates/></xsl:template>
   <xsl:template match="app//unclear"><xsl:apply-templates/></xsl:template>
 
 
