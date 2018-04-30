@@ -598,9 +598,11 @@
   <xsl:template match="mentioned">`<xsl:apply-templates/>'</xsl:template>
   <xsl:template match="add">\added{<xsl:apply-templates/>}</xsl:template>
   <xsl:template match="del">\del{<xsl:apply-templates/>}</xsl:template>
-  <xsl:template match="app//add"><xsl:apply-templates/></xsl:template>
-  <xsl:template match="app//del"><xsl:apply-templates/></xsl:template>
+  <xsl:template match="rdg/add | lem/add"><xsl:apply-templates/></xsl:template>
+  <xsl:template match="rdg/del | lem/del"><xsl:apply-templates/></xsl:template>
+  <xsl:template match="app//subst/del | app//subst/add"><xsl:apply-templates/></xsl:template>
   <xsl:template match="app//unclear"><xsl:apply-templates/></xsl:template>
+  <xsl:template match="app//note"><xsl:apply-templates/></xsl:template>
 
 
   <xsl:template match="sic[@ana='#crux']">\corruption{<xsl:apply-templates/>}</xsl:template>
