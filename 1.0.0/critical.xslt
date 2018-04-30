@@ -38,9 +38,9 @@
   <xsl:param name="apparatus-numbering">no</xsl:param>
   <xsl:param name="parallel-translation">no</xsl:param>
   <xsl:param name="app-fontium-quote">no</xsl:param>
-  <xsl:param name="include-app-notes">no</xsl:param>
-  <xsl:param name="app-notes-in-separate-apparatus">yes</xsl:param>
-  <xsl:param name="standalone-document">yes</xsl:param>
+  <xsl:param name="include-app-notes">yes</xsl:param>
+  <xsl:param name="app-notes-in-separate-apparatus">no</xsl:param>
+  <xsl:param name="standalone-document">no</xsl:param>
   <xsl:param name="create-structure-numbers">yes</xsl:param>
   <xsl:param name="title-heading-level">section</xsl:param>
 
