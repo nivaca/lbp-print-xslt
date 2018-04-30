@@ -852,17 +852,14 @@
 
               <!-- Don't make a separate apparatus -->
               <xsl:otherwise>
-                <xsl:text>Note: </xsl:text>
+                <xsl:text>; </xsl:text>
                 <xsl:apply-templates select="note"/>
               </xsl:otherwise>
             </xsl:choose>
           </xsl:when>
-
-          <!-- There is not note, or it is excluded, so we just close the Bfootnote -->
-          <xsl:otherwise>
-            <xsl:text>}}</xsl:text>
-          </xsl:otherwise>
         </xsl:choose>
+        <!-- There is not note, or it is excluded, so we just close the Bfootnote -->
+        <xsl:text>}}</xsl:text>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
