@@ -1232,6 +1232,20 @@
     <xsl:if test=".//unclear">
       <xsl:text> \emph{ut videtur} </xsl:text>
     </xsl:if>
+    <!-- Does the rdg have any certainty indication? -->
+    <xsl:if test="@cert">
+      <xsl:choose>
+        <xsl:when test="@cert = 'low'">
+          <xsl:text> \emph{ut videtur} </xsl:text>
+        </xsl:when>
+        <xsl:when test="@cert = 'medium'">
+          <xsl:text> \emph{probabiliter} </xsl:text>
+        </xsl:when>
+        <xsl:when test="@cert = 'high'">
+          <xsl:text> \emph{certe} </xsl:text>
+        </xsl:when>
+      </xsl:choose>
+    </xsl:if>
     <xsl:value-of select="translate(@wit, '#', '')"/>
     <!-- Any hand attributes? -->
     <xsl:if test=".//@hand">
