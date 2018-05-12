@@ -200,13 +200,6 @@
       \usepackage{gitinfo2}
 
 
-      % title settings
-      \usepackage{titlesec}
-      \titleformat{\chapter}{\normalfont\large\scshape}{\thechapter}{50pt}{}
-      \titleformat{\section}{\normalfont\scshape}{\thesection}{1em}{}
-      \titleformat{\subsection}[block]{\centering\normalfont\itshape}{\thesubsection}{}{}
-      \titlespacing*{\subsection}{20pt}{3.25ex plus 1ex minus .2 ex}{1.5ex plus .2ex}[20pt]
-
       % reledmac settings
       \usepackage[final]{reledmac}
 
@@ -237,25 +230,6 @@
 
       % other settings
       \linespread{1.1}
-
-      % Critical edition sections
-      \usepackage{titlesec}
-      \titleclass{\extrasection}{straight}[\section]
-      \titleclass{\extrasubsection}{straight}[\subsection]
-      \titleformat{\extrasection}[display]
-      {\scshape\Large\fillast}
-      {}
-      {1ex minus .1ex}
-      {}
-      \titleformat{\extrasubsection}[display]
-      {\itshape\large\fillast}
-      {}
-      {1ex minus .1ex}
-      {}
-      \titlespacing{\extrasection}{20pt}{*4}{*2}[20pt]
-      \titlespacing*{\extrasubsection}{20pt}{*4}{*2}[20pt]
-      \newcounter{extrasection}
-      \newcounter{extrasubsection}
 
       <xsl:if test="my:istrue($parallel-translation)">
         <xsl:text>
@@ -310,9 +284,22 @@
 
   <!-- BLOCK ELEMENTS -->
   <xsl:template match="head">
-    <xsl:if test="not(following-sibling::*[1][self::p])">
-      \subsection*{<xsl:apply-templates/>}
-    </xsl:if>
+    \pstart
+    \eledsubsection*{<xsl:apply-templates/>}
+    \pend
+  </xsl:template>
+
+  <xsl:template match="body/div">
+    <xsl:text>&#xa;&#xa;\begin{</xsl:text>
+    <xsl:value-of select="$text_language"/>
+    <xsl:text>}</xsl:text>
+    <xsl:text>&#xa;\beginnumbering
+    </xsl:text>
+    <xsl:apply-templates />
+    <xsl:text>&#xa;&#xa;\endnumbering</xsl:text>
+    <xsl:text>&#xa;\end{</xsl:text>
+    <xsl:value-of select="$text_language"/>
+    <xsl:text>}</xsl:text>
   </xsl:template>
 
   <xsl:template name="paragraphs" match="p">
@@ -329,23 +316,10 @@
       <xsl:value-of select="parent::div[1]/@xml:id"/>
     </xsl:variable>
     <xsl:variable name="p_id" select="@xml:id"/>
-    <xsl:if test="$pn='1'">
-      <xsl:text>&#xa;&#xa;\begin{</xsl:text>
-      <xsl:value-of select="$text_language"/>
-      <xsl:text>}</xsl:text>
-      <xsl:text>&#xa;\beginnumbering
-      </xsl:text>
-    </xsl:if>
     <xsl:text>&#xa;\pstart</xsl:text>
-    <xsl:if test="preceding-sibling::*[1][self::head] or
-                  ((parent::div[1]/translate(@ana, '#', '') = $structure-types/*) and (position() = 1))">
-      <xsl:text>[</xsl:text>
-      <xsl:if test="preceding-sibling::head">
-        <xsl:text>\subsection*{</xsl:text>
-        <xsl:apply-templates select="preceding-sibling::head[1]/node()"/>
-        <xsl:text>}</xsl:text>
-      </xsl:if>
-      <xsl:text>]</xsl:text>
+    <!-- No indent after headings -->
+    <xsl:if test="preceding-sibling::*[1][self::head]">
+      <xsl:text>\noindent</xsl:text>
     </xsl:if>
     <!-- If first p in div, create div id -->
     <xsl:if test="$position_in_div = 1 and $parent_div_id != ''">
@@ -404,12 +378,6 @@
     p_position: <xsl:value-of select="$p_position"/>
      -->
     <xsl:text>&#xa;\pend&#xa;</xsl:text>
-    <xsl:if test="$p_position = $p_count">
-      <xsl:text>&#xa;&#xa;\endnumbering</xsl:text>
-      <xsl:text>&#xa;\end{</xsl:text>
-      <xsl:value-of select="$text_language"/>
-      <xsl:text>}</xsl:text>
-    </xsl:if>
   </xsl:template>
 
   <xsl:template name="createLabelFromId">
