@@ -329,11 +329,15 @@
       <xsl:value-of select="parent::div[1]/@xml:id"/>
     </xsl:variable>
     <xsl:variable name="p_id" select="@xml:id"/>
+
+    <!-- Opening pstart -->
     <xsl:text>&#xa;\pstart</xsl:text>
+
     <!-- No indent after headings -->
     <xsl:if test="preceding-sibling::*[1][self::head]">
-      <xsl:text>\noindent</xsl:text>
+      <xsl:text>&#xa;\noindent%</xsl:text>
     </xsl:if>
+
     <!-- If first p in div, create div id -->
     <xsl:if test="$position_in_div = 1 and $parent_div_id != ''">
       <xsl:call-template name="createLabelFromId">
@@ -341,10 +345,14 @@
         <xsl:with-param name="labelId" select="$parent_div_id"/>
       </xsl:call-template>
     </xsl:if>
+
+    <!-- Paragraph labels -->
     <xsl:call-template name="createLabelFromId">
       <xsl:with-param name="labelType">start</xsl:with-param>
     </xsl:call-template>
     <xsl:text>&#xa;</xsl:text>
+
+    <!-- Print folio info on first paragraph. -->
     <xsl:if test="$pn='1'">
       <xsl:call-template name="createPageColumnBreak">
         <xsl:with-param name="withIndicator" select="false()"/>
@@ -353,13 +361,20 @@
       </xsl:call-template>
       <xsl:text>%&#xa;</xsl:text>
     </xsl:if>
+
+    <!-- Structure numbering -->
     <xsl:if test="my:istrue($create-structure-numbers)">
       <xsl:call-template name="create_structure_number"/>
     </xsl:if>
+
+    <!-- The content of the paragraph proper -->
     <xsl:apply-templates/>
+
+    <!-- Closing labels -->
     <xsl:call-template name="createLabelFromId">
       <xsl:with-param name="labelType">end</xsl:with-param>
     </xsl:call-template>
+
     <!-- If last p in div, create div id -->
     <xsl:if test="$position_in_div = count(parent::div/p) and $parent_div_id != ''">
       <xsl:call-template name="createLabelFromId">
@@ -368,28 +383,7 @@
       </xsl:call-template>
     </xsl:if>
 
-    <!--
-    <xsl:if test="(count(parent::div//p) = $position_in_div)">
-      <xsl:for-each select="ancestor::div">
-        ancestor_count: <xsl:value-of select="count(.//p)"/> (<xsl:value-of select="./@xml:id"/>)
-        position_in_ancestor: <xsl:number from="//p[@xml:id=$p_id]" count="p"/>
-
-
-        <xsl:call-template name="createLabelFromId">
-          <xsl:with-param name="labelId" select="parent::div/@xml:id"/>
-          <xsl:with-param name="labelType">end</xsl:with-param>
-        </xsl:call-template>
-
-      </xsl:for-each>
-    </xsl:if>
-    -->
-    <!--
-    in_div_count: <xsl:value-of select="count(parent::div//p)"/>
-    pn: <xsl:value-of select="$pn"/>
-    p_count: <xsl:value-of select="$p_count"/>
-    position_in_div: <xsl:number count="p" />
-    p_position: <xsl:value-of select="$p_position"/>
-     -->
+    <!-- Close the paragraph with \pend -->
     <xsl:text>&#xa;\pend&#xa;</xsl:text>
   </xsl:template>
 
