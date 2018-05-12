@@ -270,7 +270,6 @@
 
     </xsl:if>
 
-
     <!-- \<xsl:value-of select="$title-heading-level"/>{<xsl:value-of select="$title"/>} -->
 
     <xsl:apply-templates select="//body"/>
@@ -290,12 +289,26 @@
   </xsl:template>
 
   <xsl:template match="body/div">
+    <!--
+        Handle the first div inside the body. This will wrap the whole item text
+        and should thus contain the `\beginnumbering` and `\endnumbering`
+        commands, and the title of the item.
+    -->
     <xsl:text>&#xa;&#xa;\begin{</xsl:text>
     <xsl:value-of select="$text_language"/>
     <xsl:text>}</xsl:text>
+
     <xsl:text>&#xa;\beginnumbering
     </xsl:text>
+
+    <xsl:text>&#xa;\pstart&#xa;\eledsection*{</xsl:text>
+    <xsl:value-of select="normalize-space($title)"/>
+    <xsl:text>}
+    \pend
+    </xsl:text>
+
     <xsl:apply-templates />
+
     <xsl:text>&#xa;&#xa;\endnumbering</xsl:text>
     <xsl:text>&#xa;\end{</xsl:text>
     <xsl:value-of select="$text_language"/>
