@@ -690,9 +690,9 @@
         <!-- Store lemma text if it exists? -->
         <xsl:variable name="lemma_text">
           <xsl:choose>
-            <xsl:when test="lem/cit[quote]">
-              <xsl:value-of select="my:format-lemma(string-join(lem//quote[not(ancestor::bibl)], ''))" />
-            </xsl:when>
+            <!-- <xsl:when test="lem/cit[quote]"> -->
+            <!--   <xsl:value-of select="my:format-lemma(string-join(lem//quote[not(ancestor::bibl)], ''))" /> -->
+            <!-- </xsl:when> -->
             <xsl:when test="lem = ''"/>
             <xsl:otherwise>
               <xsl:choose>
