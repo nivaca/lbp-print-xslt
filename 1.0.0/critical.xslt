@@ -1377,19 +1377,54 @@
 
   <xsl:template match="quote">
     <xsl:choose>
-      <xsl:when test="@type='paraphrase'">
+      <xsl:when test="seg">
         <xsl:apply-templates />
       </xsl:when>
-      <xsl:when test="@type='lemma'">
+      <xsl:otherwise>
+        <xsl:choose>
+          <xsl:when test="@type='lemma'">
+            <xsl:text>\lemmaQuote{</xsl:text>
+            <xsl:apply-templates />
+            <xsl:text>}</xsl:text>
+          </xsl:when>
+          <xsl:when test="@type='paraphrase'">
+            <xsl:apply-templates />
+          </xsl:when>
+          <xsl:when test="@type='direct' or not(@type)">
+            <xsl:text>\enquote{</xsl:text>
+            <xsl:apply-templates />
+            <xsl:text>}</xsl:text>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:text>\enquote{</xsl:text>
+            <xsl:apply-templates />
+            <xsl:text>}</xsl:text>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:template>
+
+  <xsl:template match="seg[@type='qs']">
+    <xsl:choose>
+      <xsl:when test="ancestor::quote[1][@type='lemma']">
         <xsl:text>\lemmaQuote{</xsl:text>
         <xsl:apply-templates />
         <xsl:text>}</xsl:text>
       </xsl:when>
-      <xsl:when test="@type='direct' or not(@type)">
-        <xsl:text> \enquote{</xsl:text>
+      <xsl:when test="ancestor::quote[1][@type='paraphrase']">
+        <xsl:apply-templates />
+      </xsl:when>
+      <xsl:when test="ancestor::quote[1][@type='direct'] or ancestor::quote[1][not(@type)]">
+        <xsl:text>\enquote{</xsl:text>
         <xsl:apply-templates />
         <xsl:text>}</xsl:text>
       </xsl:when>
+      <xsl:otherwise>
+        <xsl:text>\enquote{</xsl:text>
+        <xsl:apply-templates />
+        <xsl:text>}</xsl:text>
+      </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
 
