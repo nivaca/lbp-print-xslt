@@ -1220,17 +1220,11 @@
     <xsl:if test=".//unclear">
       <xsl:text> \emph{ut vid.} </xsl:text>
     </xsl:if>
-    <!-- Check for sibling witDetail elements and insert content -->
-    <xsl:if test="following-sibling::witDetail[translate(@wit, '#', '')=$witness-id]">
-      <xsl:text>\emph{</xsl:text>
-      <xsl:apply-templates select="following-sibling::witDetail[translate(@wit, '#', '')=$witness-id]"/>
-      <xsl:text>} </xsl:text>
-    </xsl:if>
     <!-- Does the rdg have any certainty indication? -->
     <xsl:if test="@cert">
       <xsl:choose>
         <xsl:when test="@cert = 'low'">
-          <xsl:text> \emph{ut videtur} </xsl:text>
+          <xsl:text> \emph{ut vid.} </xsl:text>
         </xsl:when>
         <xsl:when test="@cert = 'medium'">
           <xsl:text> \emph{probabiliter} </xsl:text>
@@ -1239,6 +1233,12 @@
           <xsl:text> \emph{certe} </xsl:text>
         </xsl:when>
       </xsl:choose>
+    </xsl:if>
+    <!-- Check for sibling witDetail elements and insert content -->
+    <xsl:if test="following-sibling::witDetail[translate(@wit, '#', '')=$witness-id]">
+      <xsl:text>\emph{</xsl:text>
+      <xsl:apply-templates select="following-sibling::witDetail[translate(@wit, '#', '')=$witness-id]"/>
+      <xsl:text>} </xsl:text>
     </xsl:if>
     <xsl:value-of select="translate(@wit, '#', '')"/>
     <!-- Any hand attributes? -->
