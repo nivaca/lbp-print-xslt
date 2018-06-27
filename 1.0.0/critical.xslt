@@ -1201,15 +1201,15 @@
     <xsl:variable name="appnumber"><xsl:number level="any" from="tei:text"/></xsl:variable>
     <!-- First fill in witness references -->
     <xsl:variable name="witness-id" select="translate(@wit, '#', '')"/>
+    <!-- Then note if the reading is uncertain -->
+    <xsl:if test=".//unclear">
+      <xsl:text> \emph{ut vid.} </xsl:text>
+    </xsl:if>
     <!-- Check for sibling witDetail elements and insert content -->
     <xsl:if test="following-sibling::witDetail[translate(@wit, '#', '')=$witness-id]">
       <xsl:text>\emph{</xsl:text>
       <xsl:apply-templates select="following-sibling::witDetail[translate(@wit, '#', '')=$witness-id]"/>
       <xsl:text>} </xsl:text>
-    </xsl:if>
-    <!-- Then note if the reading is uncertain -->
-    <xsl:if test=".//unclear">
-      <xsl:text> \emph{ut vid.} </xsl:text>
     </xsl:if>
     <!-- Does the rdg have any certainty indication? -->
     <xsl:if test="@cert">
