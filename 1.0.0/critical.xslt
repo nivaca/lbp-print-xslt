@@ -1209,7 +1209,7 @@
     </xsl:if>
     <!-- Then note if the reading is uncertain -->
     <xsl:if test=".//unclear">
-      <xsl:text> \emph{ut videtur} </xsl:text>
+      <xsl:text> \emph{ut vid.} </xsl:text>
     </xsl:if>
     <!-- Does the rdg have any certainty indication? -->
     <xsl:if test="@cert">
