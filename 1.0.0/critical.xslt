@@ -758,10 +758,14 @@
             implied by the possibility of having @wit in lemma.
         -->
         <xsl:for-each select="lem|rdg">
-          <xsl:if test="not($lemma_text = my:format-lemma(.))
-                        or unclear
-                        or @type = 'correction-addition'
-                        or my:istrue($positive-apparatus)">
+          <xsl:if test="not($lemma_text = my:format-lemma(.)) or unclear or
+                        @type = 'correction-addition' or
+                        my:istrue($positive-apparatus)">
+            <!-- Check for preceding siblings that we need to put separator before -->
+            <xsl:if test="preceding-sibling::*[self::rdg]">
+              <xsl:value-of select="$app-entry-separator"/>
+              <xsl:text> </xsl:text>
+            </xsl:if>
             <xsl:call-template name="varianttype">
               <xsl:with-param name="context" select="."/>
               <xsl:with-param name="lemma_text" select="$lemma_text" />
@@ -1244,10 +1248,6 @@
     </xsl:choose>
     <xsl:if test="my:istrue($apparatus-numbering)">
       <xsl:text> n</xsl:text><xsl:value-of select="$appnumber"></xsl:value-of>
-    </xsl:if>
-    <xsl:if test="following-sibling::*[1][self::rdg]">
-      <xsl:value-of select="$app-entry-separator"/>
-      <xsl:text> </xsl:text>
     </xsl:if>
   </xsl:template>
 
