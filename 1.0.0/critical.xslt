@@ -90,7 +90,7 @@
   <!-- END: Document configuration -->
 
   <xsl:output method="text" indent="no"/>
-  <xsl:strip-space elements="div"/>
+  <xsl:strip-space elements="*"/>
   <xsl:template match="text()">
     <xsl:value-of select="replace(., '\s+', ' ')"/>
   </xsl:template>
