@@ -757,9 +757,24 @@
             TODO: Should all reading types be possible in the lemma? Any? It is
             implied by the possibility of having @wit in lemma.
         -->
-        <xsl:for-each select="lem|rdg">
-          <xsl:if test="not($lemma_text = my:format-lemma(.)) or unclear or
-                        @type = 'correction-addition' or
+        <xsl:for-each select="lem">
+          <xsl:if test="unclear or my:istrue($positive-apparatus)">
+            <xsl:call-template name="varianttype">
+              <xsl:with-param name="context" select="."/>
+              <xsl:with-param name="lemma_text" select="$lemma_text" />
+              <xsl:with-param name="preceding_word" select="$preceding_word"/>
+            </xsl:call-template>
+            <xsl:if test="following-sibling::*[self::rdg]">
+              <xsl:value-of select="$app-entry-separator"/>
+              <xsl:text> </xsl:text>
+            </xsl:if>
+
+          </xsl:if>
+        </xsl:for-each>
+
+        <xsl:for-each select="rdg">
+          <xsl:if test="not($lemma_text = my:format-lemma(.)) or
+                        @type='correction-addition' or
                         my:istrue($positive-apparatus)">
             <!-- Check for preceding siblings that we need to put separator before -->
             <xsl:if test="preceding-sibling::*[self::rdg]">
