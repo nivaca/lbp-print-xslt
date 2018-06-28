@@ -3,8 +3,16 @@ All notable changes to this project will be documented in this file.
 
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.1.0]
 ### Changed
+- Separate handling of `lem` and `rdg` so that we avoid problems when `lem`
+  contains `app` notes.
+- Improved paragraph handling.
+- Headings are line numbered.
+- Experiments with external localization table.
+- Better location matching.
+- Handling of structure types.
+- Improved line breaking.
 - Line breaking procedure in paragraphing is updated again.
 
 ## [0.0.4] -- 2017-09-02
