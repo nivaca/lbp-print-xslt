@@ -447,20 +447,6 @@
   <xsl:template name="create_structure_sub">
     <xsl:param name="anchor" />
     <xsl:param name="base_number"/>
-    <xsl:param name="p_in_div"><xsl:number count="p"/></xsl:param>
-
-    <!--
-      Create number if
-       * first p in div
-       * the parent div is a structural div element and there are no sibling divs (singular p's)
-       * there are sibling divs (branch p with subordinate divs)
-       * the parent div has the type "number-all"
-    -->
-    <xsl:if test="
-      $p_in_div = 1
-      or ($anchor/parent::div[my:struct-elem(@ana)] and not($anchor/following-sibling::div | $anchor/preceding-sibling::div))
-      or ($anchor/following-sibling::div or $anchor/preceding-sibling::div)
-      or parent::div[@type='number-all']">
 
       <!-- Then insert the base level number.
         Either take it from the passed parameter (would be in non-referenced ad-rationes)
@@ -489,7 +475,6 @@
         </xsl:if>
       </xsl:for-each>
 
-    </xsl:if>
   </xsl:template>
 
   <xsl:template name="create_structure_number">
@@ -505,14 +490,36 @@
         <xsl:otherwise/>
       </xsl:choose>
     </xsl:variable>
-    <xsl:if test="ancestor::div[my:struct-elem(@ana)]">
+    <xsl:variable name="p_in_div"><xsl:number count="p"/></xsl:variable>
+
+    <!--
+      Create number if
+       * there is an ancestor with structure element in @ana AND one of:
+       * first p in div
+       * the parent div is a structural div element and there are no sibling divs (singular p's)
+       * there are sibling divs (branch p with subordinate divs)
+       * the parent div has the type "number-all"
+    -->
+    <xsl:if test="
+      ancestor::div[my:struct-elem(@ana)] and
+      (
+        $p_in_div = 1
+        or (
+              parent::div[my:struct-elem(@ana)]
+              and not(following-sibling::div | preceding-sibling::div)
+            )
+        or (following-sibling::div or preceding-sibling::div)
+        or parent::div[@type='number-all']
+      )
+      ">
+
       <!-- First insert the number text and possible prefix -->
       <xsl:text>\no{</xsl:text>
       <xsl:value-of select="$prefix_value"/>
 
       <!-- Select the numbering procedure -->
       <xsl:variable name="root" select="/"/>
-      <xsl:variable name="p_in_div"><xsl:number count="p"/></xsl:variable>
+
       <xsl:choose>
         <xsl:when test="@corresp">
           <xsl:for-each select="tokenize(@corresp, ' ')">
@@ -520,7 +527,6 @@
             <xsl:if test="position() > 1">, </xsl:if>
             <xsl:call-template name="create_structure_sub">
               <xsl:with-param name="anchor" select="$root//*[@xml:id=$corresp_id]"/>
-              <xsl:with-param name="p_in_div" select="$p_in_div"/>
             </xsl:call-template>
           </xsl:for-each>
         </xsl:when>
@@ -530,13 +536,8 @@
             <xsl:if test="position() > 1">, </xsl:if>
             <xsl:call-template name="create_structure_sub">
               <xsl:with-param name="anchor" select="$root//*[@xml:id=$corresp_id]"/>
-              <xsl:with-param name="p_in_div" select="$p_in_div"/>
             </xsl:call-template>
           </xsl:for-each>
-          <xsl:variable name="corresp_div_id" select="translate(parent::div/@corresp, '#', '')"/>
-          <xsl:call-template name="create_structure_sub">
-            <xsl:with-param name="anchor" select="//*[@xml:id=$corresp_div_id]"/>
-          </xsl:call-template>
         </xsl:when>
         <xsl:otherwise>
           <xsl:call-template name="create_structure_sub">
