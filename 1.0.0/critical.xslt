@@ -759,7 +759,9 @@
             implied by the possibility of having @wit in lemma.
         -->
         <xsl:for-each select="lem">
-          <xsl:if test="unclear or my:istrue($positive-apparatus)">
+          <!-- If wit contains a whitespace there is more than one witness. -->
+          <xsl:if test="unclear or my:istrue($positive-apparatus)
+                        or contains(@wit, ' ')">
             <xsl:call-template name="varianttype">
               <xsl:with-param name="context" select="."/>
               <xsl:with-param name="lemma_text" select="$lemma_text" />
