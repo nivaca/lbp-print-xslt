@@ -300,7 +300,10 @@
         and should thus contain the `\beginnumbering` and `\endnumbering`
         commands, and the title of the item.
     -->
-    <xsl:text>&#xa;&#xa;\begin{</xsl:text>
+    <xsl:text>&#xa;\label{</xsl:text>
+    <xsl:value-of select="@xml:id"/>
+    <xsl:text>}</xsl:text>
+    <xsl:text>&#xa;\begin{</xsl:text>
     <xsl:value-of select="$text_language"/>
     <xsl:text>}</xsl:text>
 
