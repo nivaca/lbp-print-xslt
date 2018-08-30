@@ -288,6 +288,12 @@
     \pend
   </xsl:template>
 
+  <xsl:template match="/TEI/teiHeader/fileDesc/titleStmt/title">
+    \pstart
+    \eledsection*{<xsl:apply-templates/>}
+    \pend
+  </xsl:template>
+
   <xsl:template match="body/div">
     <!--
         Handle the first div inside the body. This will wrap the whole item text
@@ -301,12 +307,7 @@
     <xsl:text>&#xa;\beginnumbering
     </xsl:text>
 
-    <xsl:text>&#xa;\pstart&#xa;\eledsection*{</xsl:text>
-    <xsl:value-of select="normalize-space($title)"/>
-    <xsl:text>}
-    \pend
-    </xsl:text>
-
+    <xsl:apply-templates select="/TEI/teiHeader/fileDesc/titleStmt/title" />
     <xsl:apply-templates />
 
     <xsl:text>&#xa;&#xa;\endnumbering</xsl:text>
