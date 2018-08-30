@@ -1161,7 +1161,7 @@
           <xsl:when test="name($context) = lem"/>
           <xsl:otherwise>
             <xsl:apply-templates select="corr"/>
-            <xsl:text> \emph{conj.} </xsl:text>
+            <xsl:text> \emph{coni.} </xsl:text>
           </xsl:otherwise>
         </xsl:choose>
         <xsl:if test="@source">
