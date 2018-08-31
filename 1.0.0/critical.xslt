@@ -290,7 +290,7 @@
 
   <xsl:template match="/TEI/teiHeader/fileDesc/titleStmt/title">
     \pstart
-    \eledsection*{<xsl:apply-templates/>}
+    \eledsubsection*{<xsl:apply-templates/>}
     \pend
   </xsl:template>
 
@@ -323,9 +323,6 @@
     <xsl:param name="inParallelText"/>
     <xsl:variable name="pn"><xsl:number level="any" from="tei:text"/></xsl:variable>
     <xsl:variable name="p_count" select="count(//body/div/descendant::p)"/>
-    <xsl:variable name="p_position">
-      <xsl:number from="/TEI/text/body/div" level="any"/>
-    </xsl:variable>
     <xsl:variable name="position_in_div">
       <xsl:number count="p" />
     </xsl:variable>
@@ -338,7 +335,7 @@
     <xsl:text>&#xa;\pstart</xsl:text>
 
     <!-- No indent after headings -->
-    <xsl:if test="preceding-sibling::*[1][self::head]">
+    <xsl:if test="preceding-sibling::*[1][self::head] or $pn='1'">
       <xsl:text>&#xa;\noindent%</xsl:text>
     </xsl:if>
 
