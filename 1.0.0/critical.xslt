@@ -759,29 +759,24 @@
         <xsl:for-each select="lem">
           <!-- If wit contains a whitespace there is more than one witness. -->
           <xsl:if test="unclear or my:istrue($positive-apparatus)
-                        or contains(@wit, ' ')">
+                        or contains(@wit, ' ')
+                        or @type='conjecture-supplied'
+                        or @type='conjecture-removed'
+                        or @type='conjecture-corrected'">
             <xsl:call-template name="varianttype">
               <xsl:with-param name="context" select="."/>
               <xsl:with-param name="lemma_text" select="$lemma_text" />
               <xsl:with-param name="preceding_word" select="$preceding_word"/>
             </xsl:call-template>
-            <xsl:if test="following-sibling::*[self::rdg]">
-              <xsl:value-of select="$app-entry-separator"/>
-              <xsl:text> </xsl:text>
-            </xsl:if>
-
           </xsl:if>
         </xsl:for-each>
 
         <xsl:for-each select="rdg">
           <xsl:if test="not($lemma_text = my:format-lemma(.)) or
+                        unclear or
                         @type='correction-addition' or
                         my:istrue($positive-apparatus)">
             <!-- Check for preceding siblings that we need to put separator before -->
-            <xsl:if test="preceding-sibling::*[self::rdg]">
-              <xsl:value-of select="$app-entry-separator"/>
-              <xsl:text> </xsl:text>
-            </xsl:if>
             <xsl:call-template name="varianttype">
               <xsl:with-param name="context" select="."/>
               <xsl:with-param name="lemma_text" select="$lemma_text" />
@@ -1116,7 +1111,7 @@
       <xsl:when test="@type = 'conjecture-supplied'">
         <xsl:choose>
           <!-- If we come from lemma element, don't print the content of it -->
-          <xsl:when test="name($context) = lem"/>
+          <xsl:when test="name($context) = 'lem'"/>
           <!-- Otherwise, just print -->
           <xsl:otherwise>
             <xsl:apply-templates select="supplied/text()"/>
@@ -1140,13 +1135,13 @@
             </xsl:call-template>
           </xsl:when>
           <!-- If we come from lemma element, don't print the content of it -->
-          <xsl:when test="name($context) = lem"/>
+          <xsl:when test="name($context) = 'lem'"/>
           <xsl:otherwise>
             <xsl:apply-templates select="supplied"/>
           </xsl:otherwise>
         </xsl:choose>
-        <xsl:text> \emph{secl.}</xsl:text>
         <xsl:if test="@source">
+          <xsl:text> \emph{secl.}</xsl:text>
           <xsl:text> </xsl:text>
           <xsl:call-template name="get_witness_siglum"/>
         </xsl:if>
@@ -1156,13 +1151,13 @@
       <xsl:when test="@type = 'conjecture-corrected'">
         <xsl:choose>
           <!-- If we come from lemma element, don't repeat the content -->
-          <xsl:when test="name($context) = lem"/>
+          <xsl:when test="name($context) = 'lem'"/>
           <xsl:otherwise>
             <xsl:apply-templates select="corr"/>
-            <xsl:text> \emph{coni.} </xsl:text>
           </xsl:otherwise>
         </xsl:choose>
         <xsl:if test="@source">
+          <xsl:text> \emph{coni.}</xsl:text>
           <xsl:text> </xsl:text>
           <xsl:call-template name="get_witness_siglum"/>
         </xsl:if>
@@ -1264,6 +1259,10 @@
     </xsl:choose>
     <xsl:if test="my:istrue($apparatus-numbering)">
       <xsl:text> n</xsl:text><xsl:value-of select="$appnumber"></xsl:value-of>
+    </xsl:if>
+    <xsl:if test="following-sibling::*[self::rdg]">
+      <xsl:value-of select="$app-entry-separator"/>
+      <xsl:text> </xsl:text>
     </xsl:if>
   </xsl:template>
 
