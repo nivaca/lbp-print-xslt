@@ -844,7 +844,6 @@
 
               <!-- Don't make a separate apparatus -->
               <xsl:otherwise>
-                <xsl:text>; </xsl:text>
                 <xsl:apply-templates select="note"/>
               </xsl:otherwise>
             </xsl:choose>
@@ -1260,7 +1259,7 @@
     <xsl:if test="my:istrue($apparatus-numbering)">
       <xsl:text> n</xsl:text><xsl:value-of select="$appnumber"></xsl:value-of>
     </xsl:if>
-    <xsl:if test="following-sibling::*[self::rdg]">
+    <xsl:if test="following-sibling::*[self::rdg] or following-sibling::*[self::note]">
       <xsl:value-of select="$app-entry-separator"/>
       <xsl:text> </xsl:text>
     </xsl:if>
