@@ -657,20 +657,6 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="seg">
-    <xsl:if test="@type='target'">
-      <xsl:call-template name="createLabelFromId">
-        <xsl:with-param name="labelType">start</xsl:with-param>
-      </xsl:call-template>
-    </xsl:if>
-    <xsl:apply-templates/>
-    <xsl:if test="@type='target'">
-      <xsl:call-template name="createLabelFromId">
-        <xsl:with-param name="labelType">end</xsl:with-param>
-      </xsl:call-template>
-    </xsl:if>
-  </xsl:template>
-
   <!-- THE APPARATUS HANDLING -->
   <xsl:template match="app">
     <!-- First, check if we even need an apparatus entry: If the critical
