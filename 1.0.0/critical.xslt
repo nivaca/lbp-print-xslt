@@ -393,7 +393,7 @@
     <xsl:param name="labelId">
       <xsl:value-of select="@xml:id"/>
     </xsl:param>
-    <xsl:if test="@xml:id">
+    <xsl:if test="$labelId">
       <xsl:choose>
         <xsl:when test="$labelType='start'">
           <xsl:text>&#xa;</xsl:text>
