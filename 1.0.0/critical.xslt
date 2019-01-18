@@ -779,7 +779,6 @@
           <xsl:if test="my:istrue($use-positive-apparatus)
                         or parent::app[@type='positive']
                         or unclear
-                        or contains(@wit, ' ')
                         or @type='conjecture-supplied'
                         or @type='conjecture-removed'
                         or @type='conjecture-corrected'">
