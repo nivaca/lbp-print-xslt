@@ -44,6 +44,22 @@
   <xsl:param name="create-structure-numbers">yes</xsl:param>
   <xsl:param name="title-heading-level">section</xsl:param>
 
+  <xsl:variable name="use-positive-apparatus">
+    <xsl:choose>
+      <xsl:when test="my:istrue($positive-apparatus)">
+        <xsl:value-of select="true()"/>
+        <xsl:message>Using externally defined positive apparatus for conversion.</xsl:message>
+      </xsl:when>
+      <xsl:when test="//TEI/text[@ana='#positive-apparatus']">
+        <xsl:value-of select="true()"/>
+        <xsl:message>Using locally defined positive apparatus for conversion.</xsl:message>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="false()"/>
+      </xsl:otherwise>
+    </xsl:choose>
+  </xsl:variable>
+
   <xsl:variable name="localisations">
     <xsl:copy-of select="document($localisation-file)"/>
   </xsl:variable>
@@ -253,6 +269,8 @@
       \newcommand{\corruption}[1]{\textdagger#1\textdagger}
       \newcommand{\fenestra}[1]{$\ulcorner$#1$\urcorner$}
       \newcommand{\lacuna}{\supplied{\textasteriskcentered\textasteriskcentered\textasteriskcentered}}
+      \newcommand{\missingContent}[1]{$\stackrel{\mbox{\normalfont\small\kern-2pt #1}}{\dots{}}$}
+      
 
       <xsl:if test="/TEI/teiHeader/revisionDesc/@status = 'draft'">
         \usepackage{draftwatermark}
@@ -393,7 +411,7 @@
     <xsl:param name="labelId">
       <xsl:value-of select="@xml:id"/>
     </xsl:param>
-    <xsl:if test="$labelId">
+    <xsl:if test="not($labelId = '')">
       <xsl:choose>
         <xsl:when test="$labelType='start'">
           <xsl:text>&#xa;</xsl:text>
@@ -578,29 +596,43 @@
   <xsl:template match="rdg/add | lem/add"><xsl:apply-templates/></xsl:template>
   <xsl:template match="rdg/del | lem/del"><xsl:apply-templates/></xsl:template>
   <xsl:template match="app//subst/del | app//subst/add"><xsl:apply-templates/></xsl:template>
-  <xsl:template match="app//unclear"><xsl:apply-templates/></xsl:template>
+  <xsl:template match="rdg//unclear"><xsl:apply-templates/></xsl:template>
+  <xsl:template match="lem//unclear">\emph{<xsl:apply-templates/> [?]}</xsl:template>
   <xsl:template match="app//note"><xsl:apply-templates/></xsl:template>
 
 
   <xsl:template match="sic[@ana='#crux']">\corruption{<xsl:apply-templates/>}</xsl:template>
   <xsl:template match="note">\footnote{<xsl:apply-templates/>}</xsl:template>
-  <xsl:template match="gap[@type='lacuna']">\lacuna{}</xsl:template>
-  <xsl:template match="gap[@type='fenestra']">
-    <xsl:text>\fenestra{\emph{</xsl:text>
-    <xsl:call-template name="getExtent" />
-    <xsl:text>}}</xsl:text>
-  </xsl:template>
-  <xsl:template match="gap[@reason='editorial']">
-    <xsl:text>{[}skipped </xsl:text>
-    <xsl:call-template name="getExtent">
-      <xsl:with-param name="language">en</xsl:with-param>
-    </xsl:call-template>
-    <xsl:text>.</xsl:text>
-    <xsl:apply-templates />
-    <xsl:text>{]}</xsl:text>
-  </xsl:template>
   <xsl:template match="rdg/gap">\emph{illegibilis}</xsl:template>
   <xsl:template match="c[@type='variable']">\emph{<xsl:apply-templates/>}</xsl:template>
+  
+  <xsl:template match="gap">
+    <xsl:choose>
+      <xsl:when test="@type='lacuna'">\lacuna{}</xsl:when>
+      <xsl:when test="@type='fenestra'">
+        <xsl:text>\fenestra{\emph{</xsl:text>
+        <xsl:call-template name="getExtent" />
+        <xsl:text>}}</xsl:text>
+      </xsl:when>
+      <xsl:when test="@reason='editorial'">
+        <xsl:text> </xsl:text>
+        <xsl:call-template name="getMissingContent" />
+        <xsl:text>(ed.) </xsl:text>
+      </xsl:when>
+      <xsl:when test="@reason='reproduction'">
+        <xsl:text> </xsl:text>
+        <xsl:call-template name="getMissingContent" />
+        <xsl:text>(rep.) </xsl:text>
+      </xsl:when>
+      <xsl:when test="@reason='damage'">
+        <xsl:text> </xsl:text>
+        <xsl:call-template name="getMissingContent" />
+        <xsl:text> </xsl:text>
+      </xsl:when>
+      <xsl:when test="not(@reason) or @reason='difficult'" />
+    </xsl:choose>
+    
+  </xsl:template>
 
   <xsl:template match="rdg/cb | rdg/pb">
     <xsl:text>|</xsl:text>
@@ -744,7 +776,9 @@
         -->
         <xsl:for-each select="lem">
           <!-- If wit contains a whitespace there is more than one witness. -->
-          <xsl:if test="unclear or my:istrue($positive-apparatus)
+          <xsl:if test="my:istrue($use-positive-apparatus)
+                        or parent::app[@type='positive']
+                        or unclear
                         or contains(@wit, ' ')
                         or @type='conjecture-supplied'
                         or @type='conjecture-removed'
@@ -758,10 +792,11 @@
         </xsl:for-each>
 
         <xsl:for-each select="rdg">
-          <xsl:if test="not($lemma_text = my:format-lemma(.)) or
-                        unclear or
-                        @type='correction-addition' or
-                        my:istrue($positive-apparatus)">
+          <xsl:if test="not($lemma_text = my:format-lemma(.))
+                        or my:istrue($use-positive-apparatus)
+                        or parent::app[@type='positive']
+                        or unclear
+                        or @type='correction-addition'">
             <!-- Check for preceding siblings that we need to put separator before -->
             <xsl:call-template name="varianttype">
               <xsl:with-param name="context" select="."/>
@@ -1275,6 +1310,22 @@
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
+  
+  <xsl:template name="getMissingContent">
+    <xsl:variable name="unit" select=".//@unit"/>
+    <xsl:variable name="extent" select=".//@extent"/>
+    <xsl:text>\missingContent{</xsl:text>
+    <xsl:choose>
+      <xsl:when test="$unit = 'lines'">/</xsl:when>
+      <xsl:when test="$unit = 'columns'">||</xsl:when>
+    </xsl:choose>
+    <xsl:value-of select="$extent"/>
+    <xsl:choose>
+      <xsl:when test="$unit = 'lines'">/</xsl:when>
+      <xsl:when test="$unit = 'columns'">||</xsl:when>
+    </xsl:choose>
+    <xsl:text>}</xsl:text>
+  </xsl:template>
 
   <xsl:template match="*" mode="serialize" name="serialize">
     <xsl:text>&lt;</xsl:text>
@@ -1322,6 +1373,9 @@
       </xsl:when>
       <xsl:when test="add/@place = $locations-margin/*">
         <xsl:text> \emph{in marg.}</xsl:text>
+      </xsl:when>
+      <xsl:when test="add/@place = 'in-fenestra'">
+        <xsl:text> \emph{in fenestra}</xsl:text>
       </xsl:when>
     </xsl:choose>
   </xsl:template>
