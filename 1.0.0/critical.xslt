@@ -587,7 +587,7 @@
   </xsl:template>
 
   <xsl:template match="surplus">\secluded{<xsl:apply-templates/>}</xsl:template>
-  <xsl:template match="unclear">\emph{<xsl:apply-templates/> [?]}</xsl:template>
+  <xsl:template match="unclear" priority="1">\emph{<xsl:apply-templates/> [?]}</xsl:template>
   <xsl:template match="desc">\emph{<xsl:apply-templates/>}</xsl:template>
   <xsl:template match="abbr">\textsuperscript{<xsl:apply-templates/>}</xsl:template>
   <xsl:template match="mentioned">`<xsl:apply-templates/>'</xsl:template>
