@@ -587,7 +587,7 @@
   </xsl:template>
 
   <xsl:template match="surplus">\secluded{<xsl:apply-templates/>}</xsl:template>
-  <xsl:template match="unclear">\emph{<xsl:apply-templates/> [?]}</xsl:template>
+  <xsl:template match="unclear" priority="1">\emph{<xsl:apply-templates/> [?]}</xsl:template>
   <xsl:template match="desc">\emph{<xsl:apply-templates/>}</xsl:template>
   <xsl:template match="abbr">\textsuperscript{<xsl:apply-templates/>}</xsl:template>
   <xsl:template match="mentioned">`<xsl:apply-templates/>'</xsl:template>
@@ -778,7 +778,6 @@
           <!-- If wit contains a whitespace there is more than one witness. -->
           <xsl:if test="my:istrue($use-positive-apparatus)
                         or parent::app[@type='positive']
-                        or unclear
                         or @type='conjecture-supplied'
                         or @type='conjecture-removed'
                         or @type='conjecture-corrected'">
@@ -794,7 +793,6 @@
           <xsl:if test="not($lemma_text = my:format-lemma(.))
                         or my:istrue($use-positive-apparatus)
                         or parent::app[@type='positive']
-                        or unclear
                         or @type='correction-addition'">
             <!-- Check for preceding siblings that we need to put separator before -->
             <xsl:call-template name="varianttype">
